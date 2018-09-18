@@ -1,0 +1,21 @@
+## Interface: 80000
+## Title: DungeonWatchDog
+## Title-zhCN: 看门狗
+## Notes: Ignore players in dungeon finder
+## Notes-zhCN: 帮助您更优质的组建队伍
+## Version: 1.0.0
+## SavedVariables: WATCHDOG_VARS
+## SavedVariablesPerCharacter: WATCHDOG_DB
+## LoadManagers: AddonLoader
+## OptionalDeps: Ace3
+## X-License: MIT/X
+
+embeds.xml
+
+init.lua
+constants.lua
+
+locales\enUS.lua
+locales\zhCN.lua
+
+app.xml
