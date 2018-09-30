@@ -1,5 +1,6 @@
 local INFO = WATCHDOG_VARS.INFOS
 local L = LibStub("AceLocale-3.0"):GetLocale(INFO.ADDON_BASE_NAME, false)
+local AceComm = LibStub("AceComm-3.0")
 local actions = {}
 
 actions.initDB = function()
@@ -27,11 +28,33 @@ actions.initSlash = function()
             return actions.log('v'..INFO.VERSION)
         end
         actions.log("Usage:")
-		actions.log('/wd show  '..L.SLASH_TIPS_SHOW)
+        actions.log('/wd show  '..L.SLASH_TIPS_SHOW)
         actions.log('/wd export  '..L.SLASH_TIPS_EXPORT)
         actions.log('/wd clear  '..L.SLASH_TIPS_CLEAR)
         actions.log('/wd version  '..L.SLASH_TIPS_VERSION)
     end
+end
+
+actions.initAddonMessage = function()
+    local addonMessageFrame = CreateFrame('FRAME')
+    addonMessageFrame:RegisterEvent('READY_CHECK')
+    addonMessageFrame:SetScript('OnEvent', function()
+        local versionString = 'version:' .. INFO.VERSION
+        local type = (IsInGuild() and 'GUILD')
+                or (IsInRaid() and 'RAID')
+                or (IsInGroup() and 'PARTY')
+                or (IsInInstance() and 'INSTANCE_CHAT')
+                or nil
+        if not type then return end
+        AceComm:SendCommMessage(INFO.ADDON_BASE_NAME, versionString, type)
+    end)
+    AceComm:RegisterComm(INFO.ADDON_BASE_NAME, function(prefix, text)
+        if prefix ~= INFO.ADDON_BASE_NAME or not text then return end
+        if not string.find(text, 'version') then return end
+        local major, minor, revision = string.match(text, 'version:(%d).(%d).(%d)')
+        if not major or not minor or not revision then return end
+        actions.compareVersion(major, minor, revision)
+    end)
 end
 
 actions.banPlayerWithID = function(id)
