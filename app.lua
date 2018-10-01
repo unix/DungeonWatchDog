@@ -53,7 +53,7 @@ local replaceNativeUtilWithMenu = function()
         local list = _menuCopy(id)
         local setPosition = #list
         local lastPosition = findLastFuncPosition(list)
-        if not lastPosition then
+        if lastPosition ~= nil then
             setPosition = lastPosition
             table.remove(list, lastPosition)
         end
