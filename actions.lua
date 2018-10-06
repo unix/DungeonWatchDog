@@ -153,6 +153,85 @@ actions.findLimitItemLevel = function()
     return selfLevel - 50
 end
 
+actions.checkListInfo = function(id, limitLevel)
+    local passed, lastPlayer = false, nil
+    local info = { C_LFGList.GetSearchResultInfo(id) }
+    local ilvl, minutes, leaderName, members = info[6], info[8] / 60, info[13], info[14]
+    -- ilvl == 0 is not set
+    local ilvlPassed = (ilvl == 0 and true) or (ilvl > limitLevel and true) or nil
+    local memberPassed = not (minutes > 20 and members <= 1)
+
+    if not actions.isBannedPlayer(leaderName) and ilvlPassed and memberPassed then
+        passed = true
+
+        -- not includes BNetFriends / CharFriends / GuildMates
+        if info[9] == 0 and info[10] == 0 and info[11] == 0 then
+            lastPlayer = { name = leaderName, id = id }
+        end
+    end
+    return passed, lastPlayer
+end
+
+actions.meetingStoneMixin = function()
+    local GUI = LibStub('NetEaseGUI-2.0')
+    local MeetingStone = LibStub('AceAddon-3.0'):GetAddon('MeetingStone') 
+    local LfgService = MeetingStone:GetModule('LfgService')
+    local _cacheCopy = LfgService._CacheActivity
+    local limitLevel = actions.findLimitItemLevel()
+
+    LfgService._CacheActivity = function(self, id)
+        if not id then return end
+        local passed = actions.checkListInfo(id, limitLevel)
+        if not passed then return end
+        return _cacheCopy(self, id)
+    end
+
+    local BrowsePanel = MeetingStone:GetModule('BrowsePanel')
+    local _toggleMenuCopy = BrowsePanel.ToggleActivityMenu
+    BrowsePanel.ToggleActivityMenu = function(self, anchor, activity)
+        local usable, reason = self:CheckSignUpStatus(activity)
+        _toggleMenuCopy(self, anchor, activity)
+        GUI:CloseMenu()
+        GUI:ToggleMenu(anchor, {
+            {
+                text = activity:GetName(),
+                isTitle = true,
+                notCheckable = true,
+            },
+            {
+                text = L.MEETINGSTONE_APPLY_TEXT,
+                func = function() self:SignUp(activity) end,
+                disabled = not usable or activity:IsDelisted() or activity:IsApplication(),
+                tooltipTitle = not (activity:IsDelisted() or activity:IsApplication()) and L.MEETINGSTONE_APPLY_TEXT,
+                tooltipText = reason,
+                tooltipWhileDisabled = true,
+                tooltipOnButton = true,
+            },
+            {
+                text = L.MEETINGSTONE_IGNORE_TITLE,
+                func = function() actions.banPlayerWithName(activity:GetLeader()) end,
+                disabled = not activity:GetLeader(),
+                tooltipTitle = L.MEETINGSTONE_IGNORE_TOOLTIP_TITLE,
+                tooltipText = L.MEETINGSTONE_IGNORE_TOOLTIP_DESC,
+                tooltipWhileDisabled = true,
+                tooltipOnButton = true,
+            },
+            {
+                text = WHISPER_LEADER,
+                func = function() ChatFrame_SendTell(activity:GetLeader()) end,
+                disabled = not activity:GetLeader() or not activity:IsApplication(),
+                tooltipTitle = not activity:IsApplication() and WHISPER,
+                tooltipText = not activity:IsApplication() and LFG_LIST_MUST_SIGN_UP_TO_WHISPER,
+                tooltipOnButton = true,
+                tooltipWhileDisabled = true,
+            },
+            {
+                text = CANCEL,
+            },
+        }, 'cursor')
+    end
+end
+
 actions.sendVersionMessage = function()
     if not WATCHDOG_DB then return end
     if not WATCHDOG_DB.nextVersion then return end

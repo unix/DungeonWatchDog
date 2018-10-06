@@ -5,31 +5,22 @@ local L = LibStub("AceLocale-3.0"):GetLocale(INFO.ADDON_BASE_NAME, false)
 local frame = CreateFrame('FRAME')
 frame:RegisterEvent('ADDON_LOADED')
 
+
 local replaceSearchResult = function()
     local _searchCopy = C_LFGList.GetSearchResults
     local limitLevel = Actions.findLimitItemLevel()
 
     C_LFGList.GetSearchResults = function()
         local total, searchResults = _searchCopy()
-        local players = {}
-        local lastSearchPlayers = {}
+        local players, lastSearchPlayers = {}, {}
+        local passed, lastPlayer = false, nil
+
         for _, id in pairs(searchResults) do
-            local info = { C_LFGList.GetSearchResultInfo(id) }
-            local ilvl, minutes, leaderName, members = info[6], info[8] / 60, info[13], info[14]
-            -- ilvl == 0 is not set
-            local ilvlPassed = (ilvl == 0 and true) or (ilvl > limitLevel and true) or nil
-            local memberPassed = not (minutes > 20 and members <= 1)
-
-            if not Actions.isBannedPlayer(leaderName) and ilvlPassed and memberPassed then
-                table.insert(players, id)
-
-                -- not includes BNetFriends / CharFriends / GuildMates
-                if info[9] == 0 and info[10] == 0 and info[11] == 0 then
-                    table.insert(lastSearchPlayers, { name = leaderName, id = id })
-                end
-            end
+            passed, lastPlayer = Actions.checkListInfo(id, limitLevel)
+            if passed then table.insert(players, id) end
+            if lastPlayer then table.insert(lastSearchPlayers, lastPlayer) end
+            passed, lastPlayer = false, nil
         end
-
         -- record the results of the previous search
         WATCHDOG_VARS.LAST_SEARCH_RESULTS = lastSearchPlayers
         return total, players
@@ -74,17 +65,21 @@ local replaceNativeUtilWithMenu = function()
 end
 
 local watchDogInit = function(_, eventName, alias)
-    if eventName ~= 'ADDON_LOADED' or alias ~= INFO.ADDON_BASE_NAME then
-        return
+    if eventName == 'ADDON_LOADED' and alias == 'MeetingStone' then
+        Actions.meetingStoneMixin()
     end
-    Actions.initDB()
-    Actions.initSlash()
-    Actions.sendVersionMessage()
-    Actions.initAddonMessage()
 
-    replaceNativeUtilWithMenu()
-    replaceSearchResult()
-    Components.init()
+    if eventName ~= 'ADDON_LOADED' or alias == INFO.ADDON_BASE_NAME then
+        Actions.initDB()
+        Actions.initSlash()
+        Actions.sendVersionMessage()
+        Actions.initAddonMessage()
+
+        replaceNativeUtilWithMenu()
+        replaceSearchResult()
+        Components.init()
+    end
+
 end
 
 frame:SetScript('OnEvent', watchDogInit)

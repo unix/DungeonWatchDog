@@ -38,5 +38,10 @@ L['IGNORE_ALL_COMPLETED'] = '已屏蔽 %s 个玩家'
 L['IGNORE_ALL_BTN_TEXT'] = '屏蔽所有'
 L['IGNORE_ALL_CONFIRM_TEXT'] = '看門狗: 這樣做會屏蔽當前搜索結果的所有玩家，你確定嗎？'
 
+L['MEETINGSTONE_APPLY_TEXT'] = '申請加入'
+L['MEETINGSTONE_IGNORE_TITLE'] = '屏蔽 [看門狗]'
+L['MEETINGSTONE_IGNORE_TOOLTIP_TITLE'] = '屏蔽此玩家'
+L['MEETINGSTONE_IGNORE_TOOLTIP_DESC'] = '屏蔽後將無法看到此玩家組建的隊伍，可以在面板中取消屏蔽。(在聊天窗口鍵入 “/wd” 瞭解更多信息)'
+
 
 
