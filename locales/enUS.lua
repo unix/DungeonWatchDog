@@ -38,6 +38,10 @@ L['IGNORE_ALL_COMPLETED'] = '%s players have been ignored'
 L['IGNORE_ALL_BTN_TEXT'] = 'ignore all'
 L['IGNORE_ALL_CONFIRM_TEXT'] = 'WatchDog: This will ignore all players of the current search results. Are you sure ?'
 
+L['MEETINGSTONE_APPLY_TEXT'] = 'APPLY'
+L['MEETINGSTONE_IGNORE_TITLE'] = 'IGNORE [WATCH_DOG]'
+L['MEETINGSTONE_IGNORE_TOOLTIP_TITLE'] = 'Ignore this player'
+L['MEETINGSTONE_IGNORE_TOOLTIP_DESC'] = 'After ignoring, you will not see any team from this player.'
 
 
 
