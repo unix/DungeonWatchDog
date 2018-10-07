@@ -235,11 +235,17 @@ end
 actions.sendVersionMessage = function()
     if not WATCHDOG_DB then return end
     if not WATCHDOG_DB.nextVersion then return end
-
-    if WATCHDOG_DB.nextVersion == INFO.VERSION then
+    local major1, minor1, revision1 = string.match(WATCHDOG_DB.nextVersion, '(%d).(%d).(%d)')
+    local major2, minor2, revision2 = string.match(INFO.VERSION, '(%d).(%d).(%d)')
+    local resetVersion = function()
         WATCHDOG_DB.nextVersion = nil
-        return
     end
+    if not major1 or not minor1 or not revision1 then return resetVersion() end
+    if major1 < major2 then return resetVersion() end
+    if major1 == major2 and minor1 < minor2 then return resetVersion() end
+    if major1 == major2 and minor1 == minor2 and revision1 < revision2 then return resetVersion() end 
+
+    if WATCHDOG_DB.nextVersion == INFO.VERSION then return resetVersion() end
     actions.log(L.VERSION_EXPIRED)
 end
 

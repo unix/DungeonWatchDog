@@ -68,7 +68,7 @@ local watchDogInit = function(_, eventName, alias)
     if eventName == 'ADDON_LOADED' and alias == 'MeetingStone' then
         Actions.meetingStoneMixin()
     end
-
+    
     if eventName ~= 'ADDON_LOADED' or alias == INFO.ADDON_BASE_NAME then
         Actions.initDB()
         Actions.initSlash()
