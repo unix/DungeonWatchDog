@@ -1,7 +1,9 @@
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local Constants = addon:NewModule('Constants')
 
 local infos = {
     ADDON_BASE_NAME = 'DungeonWatchDog',
-    VERSION = '2.0.2',
+    VERSION = '2.1.0',
     IGNORE_PLANEL_FRAME = 'ignorePanelFrame',
     EXPORT_PLANEL_FRAME = 'exportPanelFrame',
     KEYWORD_PLANEL_FRAME = 'keywordPanelFrame',
@@ -28,6 +30,6 @@ local infos = {
     EXPORT_TYPE_MERGE = 'merge',
 }
 
-WATCHDOG_VARS.INFOS = infos
-
-_G[infos.ADDON_BASE_NAME] = {}
+function Constants:GetInfos()
+    return infos
+end

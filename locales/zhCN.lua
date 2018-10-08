@@ -1,5 +1,6 @@
-local INFO = WATCHDOG_VARS.INFOS
-local L = LibStub("AceLocale-3.0"):NewLocale(INFO.ADDON_BASE_NAME, "zhCN", false)
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local infos = addon:GetModule('Constants'):GetInfos()
+local L = LibStub("AceLocale-3.0"):NewLocale(infos.ADDON_BASE_NAME, "zhCN", false)
 if not L then return end
 
 L['ADDON_SHOW_NAME'] = '看门狗'
@@ -28,7 +29,7 @@ L['EXPORT_CLOSE_BTN_TEXT'] = '关闭'
 L['EXPORT_SUCCESS'] = '导入完毕，共计 %s 个玩家'
 L['EXPORT_TIPS_WITH_TYPE_COVER'] = '导入数据正在覆盖原屏蔽列表'
 L['EXPORT_TIPS_WITH_TYPE_MERGE'] = '导入数据正在与原屏蔽列表合并'
-L['SLASH_TIPS_SHOW'] = '展示屏蔽列表'
+L['SLASH_TIPS_SHOW'] = '展示控制面板'
 L['SLASH_TIPS_EXPORT'] = '展示导入与导出面板'
 L['SLASH_TIPS_CLEAR'] = '清空屏蔽列表 (取消所有屏蔽)'
 L['SLASH_TIPS_VERSION'] = '查看插件版本'
@@ -42,4 +43,28 @@ L['MEETINGSTONE_APPLY_TEXT'] = '申请加入'
 L['MEETINGSTONE_IGNORE_TITLE'] = '屏蔽 [看门狗]'
 L['MEETINGSTONE_IGNORE_TOOLTIP_TITLE'] = '屏蔽此玩家'
 L['MEETINGSTONE_IGNORE_TOOLTIP_DESC'] = '屏蔽后将无法看到该玩家组建的队伍，可以在控制面板的屏蔽列表中取消。(聊天栏输入 "/wd" 了解更多命令)'
+
+
+L['SETTINGS_PORTAL_NAME'] = '全局'
+L['SETTINGS_PORTAL_HEADER'] = '全局'
+L['SETTINGS_PORTAL_DESC'] = '\n全局设置\n\n'
+L['SETTINGS_PORTAL_TOGGLE1'] = '启用默认过滤'
+L['SETTINGS_PORTAL_TOGGLE2'] = '有新版本时提示我'
+L['SETTINGS_PORTAL_STATUS_ALL'] = '\n\n\n屏蔽列表数量: '
+L['SETTINGS_PORTAL_VERSION'] = '\n当前版本: v'
+L['SETTINGS_IGNORE_LIST_NAME'] = '屏蔽列表'
+L['SETTINGS_IGNORE_LIST_HEADER'] = '屏蔽列表'
+L['SETTINGS_IGNORE_LIST_DESC'] = '\n点击打开屏蔽列表查看详情。\n\n'
+L['SETTINGS_IGNORE_LIST_BTN1'] = '显示屏蔽列表'
+L['SETTINGS_EXPORT_NAME'] = '导入/导出'
+L['SETTINGS_EXPORT_HEADER'] = '导入/导出'
+L['SETTINGS_EXPORT_DESC'] = '\n你可以通过导出功能与他人分享你的屏蔽列表，同时也能导入一段屏蔽字符串。\n\n导入一段字符会覆盖你原有的屏蔽列表。\n'
+L['SETTINGS_EXPORT_BTN1'] = '生成导出字符串'
+L['SETTINGS_EXPORT_INPUT'] = '导出字符串'
+L['SETTINGS_CLEAR_NAME'] = '清理所有'
+L['SETTINGS_CLEAR_HEADER'] = '清理所有'
+L['SETTINGS_CLEAR_DESC'] = '\n这会清除所有的屏蔽列表，并且不可恢复。\n\n'
+L['SETTINGS_CLEAR_BTN1'] = '立即清理所有'
+L['SETTINGS_CLEAR_CONFIR'] = '这样做会清空屏蔽列表，并且无法恢复，你确定仍旧要这样做吗?'
+
 

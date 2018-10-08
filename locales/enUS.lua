@@ -1,5 +1,6 @@
-local INFO = WATCHDOG_VARS.INFOS
-local L = LibStub("AceLocale-3.0"):NewLocale(INFO.ADDON_BASE_NAME, "enUS", true)
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local infos = addon:GetModule('Constants'):GetInfos()
+local L = LibStub("AceLocale-3.0"):NewLocale(infos.ADDON_BASE_NAME, "enUS", true)
 
 
 L['ADDON_SHOW_NAME'] = 'DUNGEON WATCH DOG'
@@ -44,5 +45,26 @@ L['MEETINGSTONE_IGNORE_TOOLTIP_TITLE'] = 'Ignore this player'
 L['MEETINGSTONE_IGNORE_TOOLTIP_DESC'] = 'After ignoring, you will not see any team from this player.'
 
 
+L['SETTINGS_PORTAL_NAME'] = 'Global'
+L['SETTINGS_PORTAL_HEADER'] = 'Global'
+L['SETTINGS_PORTAL_DESC'] = '\nGlobal Settings\n\n'
+L['SETTINGS_PORTAL_TOGGLE1'] = 'Enable default filter'
+L['SETTINGS_PORTAL_TOGGLE2'] = 'Remind me when version updated'
+L['SETTINGS_PORTAL_STATUS_ALL'] = '\n\n\nIgnore list count: '
+L['SETTINGS_PORTAL_VERSION'] = '\nCurrent version: v'
+L['SETTINGS_IGNORE_LIST_NAME'] = 'Ignore list'
+L['SETTINGS_IGNORE_LIST_HEADER'] = 'Ignore list'
+L['SETTINGS_IGNORE_LIST_DESC'] = '\nClick to open the ignore list to see details.\n\n'
+L['SETTINGS_IGNORE_LIST_BTN1'] = 'Show ignore list'
+L['SETTINGS_EXPORT_NAME'] = 'Improt/Export'
+L['SETTINGS_EXPORT_HEADER'] = 'Improt / Export'
+L['SETTINGS_EXPORT_DESC'] = '\nYou can share your list with others by Export, and you can also import a string.\n\nImporting a string will cover your ignore list.\n'
+L['SETTINGS_EXPORT_BTN1'] = 'Generate export string'
+L['SETTINGS_EXPORT_INPUT'] = 'Export string'
+L['SETTINGS_CLEAR_NAME'] = 'Clean'
+L['SETTINGS_CLEAR_HEADER'] = 'Clean up all'
+L['SETTINGS_CLEAR_DESC'] = '\nThis clears all ignore lists and is not recoverable.\n\n'
+L['SETTINGS_CLEAR_BTN1'] = 'Clear up'
+L['SETTINGS_CLEAR_CONFIR'] = 'This operation will empty ignore list and cannot be resumed. Are you sure you want to do that?'
 
 

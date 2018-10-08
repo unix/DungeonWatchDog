@@ -1,14 +1,12 @@
-local INFO = WATCHDOG_VARS.INFOS
-local Actions = _G[INFO.ADDON_BASE_NAME].Actions
-local Components = _G[INFO.ADDON_BASE_NAME].Components
-local L = LibStub("AceLocale-3.0"):GetLocale(INFO.ADDON_BASE_NAME, false)
-local frame = CreateFrame('FRAME')
-frame:RegisterEvent('ADDON_LOADED')
+local L = LibStub("AceLocale-3.0"):GetLocale('DungeonWatchDog', false)
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local infos = addon:GetModule('Constants'):GetInfos()
+local Actions = addon:GetModule('Actions')
 
 
 local replaceSearchResult = function()
     local _searchCopy = C_LFGList.GetSearchResults
-    local limitLevel = Actions.findLimitItemLevel()
+    local limitLevel = Actions:findLimitItemLevel()
 
     C_LFGList.GetSearchResults = function()
         local total, searchResults = _searchCopy()
@@ -16,7 +14,7 @@ local replaceSearchResult = function()
         local passed, lastPlayer = false, nil
 
         for _, id in pairs(searchResults) do
-            passed, lastPlayer = Actions.checkListInfo(id, limitLevel)
+            passed, lastPlayer = Actions:checkListInfo(id, limitLevel)
             if passed then table.insert(players, id) end
             if lastPlayer then table.insert(lastSearchPlayers, lastPlayer) end
             passed, lastPlayer = false, nil
@@ -51,8 +49,12 @@ local replaceNativeUtilWithMenu = function()
         table.insert(list, setPosition, {
             text = L.SEARCH_MENU_TEXT,
             func = function()
-                Actions.banPlayerWithID(id)
-                Components.Ignores.updateCountInShow()
+                Actions:banPlayerWithID(id)
+                local Components = addon:GetModule('Components', true)
+                if Components then 
+                    local Ignores = Components:get('Ignores')
+                    Ignores:updateCountInShow()
+                end
             end,
             notCheckable = true,
             disabled = nil,
@@ -64,23 +66,15 @@ local replaceNativeUtilWithMenu = function()
     end
 end
 
-local watchDogInit = function(_, eventName, alias)
-    if eventName == 'ADDON_LOADED' and alias == 'MeetingStone' then
-        Actions.meetingStoneMixin()
-    end
-    
-    if eventName ~= 'ADDON_LOADED' or alias == INFO.ADDON_BASE_NAME then
-        Actions.initDB()
-        Actions.initSlash()
-        Actions.sendVersionMessage()
-        Actions.initAddonMessage()
 
-        replaceNativeUtilWithMenu()
-        replaceSearchResult()
-        Components.init()
-    end
+function addon:OnEnable()
+    Actions:initSlash()
+    Actions:sendVersionMessage()
+    Actions:initAddonMessage()
 
+    replaceNativeUtilWithMenu()
+    replaceSearchResult()
+
+    local MeetingStone = LibStub('AceAddon-3.0'):GetAddon('MeetingStone', true)
+    if MeetingStone then Actions:meetingStoneMixin() end
 end
-
-frame:SetScript('OnEvent', watchDogInit)
-
