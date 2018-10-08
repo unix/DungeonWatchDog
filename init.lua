@@ -9,9 +9,15 @@ end
 function Init:DB()
     if not WATCHDOG_DB then WATCHDOG_DB = {} end
     if not WATCHDOG_DB.players then WATCHDOG_DB.players = {} end
+    if WATCHDOG_DB.defaultFilterToggle == nil then 
+        WATCHDOG_DB.defaultFilterToggle = true
+    end
+    if WATCHDOG_DB.versionMessageToggle == nil then 
+        WATCHDOG_DB.versionMessageToggle = true
+    end
 end
 
-function Init:new()
+function Init:OnInitialize()
     self:vars()
     self:DB()
 end

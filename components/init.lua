@@ -1,10 +1,18 @@
-local INFO = WATCHDOG_VARS.INFOS
-if not _G[INFO.ADDON_BASE_NAME].Components then _G[INFO.ADDON_BASE_NAME].Components = {} end
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local Components = addon:NewModule('Components')
+local Ignores = addon:GetModule('Ignores')
+local Settings = addon:GetModule('Settings')
+local IgnoreAll = addon:GetModule('IgnoreAll')
 
-_G[INFO.ADDON_BASE_NAME].Components.init = function()
-    for k, v in pairs(_G[INFO.ADDON_BASE_NAME].Components) do
-        if k ~= 'init' and type(v.init) == 'function' then
-            v.init()
-        end
-    end
+function Components:OnInitialize()
+    self.refs = {
+        ['Ignores'] = Ignores,
+        ['Settings'] = Settings,
+        ['IgnoreAll'] = IgnoreAll,
+    }
+end
+
+function Components:get(name)
+    if not self.refs[name] then return nil end
+    return self.refs[name]
 end

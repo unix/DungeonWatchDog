@@ -12,22 +12,14 @@ function Actions:initSlash()
     SlashCmdList['WATCHDOG'] = function(param)
         param = string.lower(param)
         if param == 'show' then 
-            return _G[infos.ADDON_BASE_NAME].Components.Ignores.open()
-        end
-        if param == 'export' then
-            return _G[infos.ADDON_BASE_NAME].Components.Export.open()
-        end
-        if param == 'clear' then
-            self:unbanAllplayers()
-            return _G[infos.ADDON_BASE_NAME].Components.Ignores.close()
+            local Settings = addon:GetModule('Settings', true)
+            return Settings and Settings:Open()
         end
         if param == 'version' then
             return self:log('v'..infos.VERSION)
         end
         self:log("Usage:")
         self:log('/wd show  '..L.SLASH_TIPS_SHOW)
-        self:log('/wd export  '..L.SLASH_TIPS_EXPORT)
-        self:log('/wd clear  '..L.SLASH_TIPS_CLEAR)
         self:log('/wd version  '..L.SLASH_TIPS_VERSION)
     end
 end
@@ -151,15 +143,21 @@ function Actions:findLimitItemLevel()
 end
 
 function Actions:checkListInfo(id, limitLevel)
+    
     local passed, lastPlayer = false, nil
     local info = { C_LFGList.GetSearchResultInfo(id) }
     if not info then return passed, lastPlayer end
     local ilvl, minutes, leaderName, members = info[6], (info[8] or 0) / 60, info[13], info[14]
+    
+    if not leaderName then return true, nil end
+    
+    -- if leaderName == nil then return  end
     -- ilvl == 0 is not set
     local ilvlPassed = (not ilvl and true) or (ilvl == 0 and true) or (ilvl > limitLevel and true) or nil
     local memberPassed = not (minutes > 20 and members <= 1)
+    local defaultFilter = (not WATCHDOG_DB.defaultFilterToggle and true) or (ilvlPassed and memberPassed)
 
-    if not self:isBannedPlayer(leaderName) and ilvlPassed and memberPassed then
+    if not self:isBannedPlayer(leaderName) and defaultFilter then
         passed = true
 
         -- not includes BNetFriends / CharFriends / GuildMates
@@ -233,6 +231,8 @@ end
 function Actions:sendVersionMessage()
     if not WATCHDOG_DB then return end
     if not WATCHDOG_DB.nextVersion then return end
+    if not WATCHDOG_DB.versionMessageToggle then return end
+
     local major1, minor1, revision1 = string.match(WATCHDOG_DB.nextVersion, '(%d).(%d).(%d)')
     local major2, minor2, revision2 = string.match(infos.VERSION, '(%d).(%d).(%d)')
     local resetVersion = function()

@@ -1,13 +1,8 @@
 local L = LibStub("AceLocale-3.0"):GetLocale('DungeonWatchDog', false)
--- local addon = LibStub('AceAddon-3.0'):NewAddon(INFO.ADDON_BASE_NAME)
 local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
 local infos = addon:GetModule('Constants'):GetInfos()
 local Actions = addon:GetModule('Actions')
--- local Components = _G[infos.ADDON_BASE_NAME].Components
 
-function addon:OnInitialize()
-    addon:GetModule('Init'):new()
-end
 
 local replaceSearchResult = function()
     local _searchCopy = C_LFGList.GetSearchResults
@@ -55,7 +50,11 @@ local replaceNativeUtilWithMenu = function()
             text = L.SEARCH_MENU_TEXT,
             func = function()
                 Actions:banPlayerWithID(id)
-                Components.Ignores.updateCountInShow()
+                local Components = addon:GetModule('Components', true)
+                if Components then 
+                    local Ignores = Components:get('Ignores')
+                    Ignores:updateCountInShow()
+                end
             end,
             notCheckable = true,
             disabled = nil,
@@ -75,7 +74,6 @@ function addon:OnEnable()
 
     replaceNativeUtilWithMenu()
     replaceSearchResult()
-    -- Components.init()
 
     local MeetingStone = LibStub('AceAddon-3.0'):GetAddon('MeetingStone', true)
     if MeetingStone then Actions:meetingStoneMixin() end
