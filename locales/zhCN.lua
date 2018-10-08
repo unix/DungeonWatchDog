@@ -1,5 +1,6 @@
-local INFO = WATCHDOG_VARS.INFOS
-local L = LibStub("AceLocale-3.0"):NewLocale(INFO.ADDON_BASE_NAME, "zhCN", false)
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local infos = addon:GetModule('Constants'):GetInfos()
+local L = LibStub("AceLocale-3.0"):NewLocale(infos.ADDON_BASE_NAME, "zhCN", false)
 if not L then return end
 
 L['ADDON_SHOW_NAME'] = '看门狗'

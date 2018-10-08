@@ -1,3 +1,5 @@
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local Constants = addon:NewModule('Constants')
 
 local infos = {
     ADDON_BASE_NAME = 'DungeonWatchDog',
@@ -28,6 +30,6 @@ local infos = {
     EXPORT_TYPE_MERGE = 'merge',
 }
 
-WATCHDOG_VARS.INFOS = infos
-
-_G[infos.ADDON_BASE_NAME] = {}
+function Constants:GetInfos()
+    return infos
+end

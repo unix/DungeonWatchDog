@@ -1,5 +1,6 @@
-local INFO = WATCHDOG_VARS.INFOS
-local L = LibStub("AceLocale-3.0"):NewLocale(INFO.ADDON_BASE_NAME, "enUS", true)
+local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local infos = addon:GetModule('Constants'):GetInfos()
+local L = LibStub("AceLocale-3.0"):NewLocale(infos.ADDON_BASE_NAME, "enUS", true)
 
 
 L['ADDON_SHOW_NAME'] = 'DUNGEON WATCH DOG'
