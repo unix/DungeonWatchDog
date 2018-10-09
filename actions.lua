@@ -149,15 +149,17 @@ function Actions:checkListInfo(id, limitLevel)
     if not info then return passed, lastPlayer end
     local ilvl, minutes, leaderName, members = info[6], (info[8] or 0) / 60, info[13], info[14]
     
-    if not leaderName then return true, nil end
-    
-    -- if leaderName == nil then return  end
-    -- ilvl == 0 is not set
+    -- ilvl == 0 or nil is not set
     local ilvlPassed = (not ilvl and true) or (ilvl == 0 and true) or (ilvl > limitLevel and true) or nil
     local memberPassed = not (minutes > 20 and members <= 1)
     local defaultFilter = (not WATCHDOG_DB.defaultFilterToggle and true) or (ilvlPassed and memberPassed)
 
-    if not self:isBannedPlayer(leaderName) and defaultFilter then
+    -- default filter 
+    if not defaultFilter then return passed, lastPlayer end
+
+    if not leaderName then return true, nil end
+
+    if not self:isBannedPlayer(leaderName) then
         passed = true
 
         -- not includes BNetFriends / CharFriends / GuildMates
