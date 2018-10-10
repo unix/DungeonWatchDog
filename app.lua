@@ -66,6 +66,22 @@ local replaceNativeUtilWithMenu = function()
     end
 end
 
+function addon:OnInitialize()
+    local f = CreateFrame('Frame')
+    f:RegisterEvent('ADDON_LOADED')
+    f:RegisterEvent('PLAYER_LOGIN')
+    f:SetScript('OnEvent', function (s, event, name)
+        if event == 'PLAYER_LOGIN' then 
+            f:UnregisterEvent('ADDON_LOADED')
+            return f:UnregisterEvent('PLAYER_LOGIN')
+        end
+        if event ~= 'ADDON_LOADED' then return end
+        if name ~= 'MeetingStone' then return end
+        if LibStub('AceAddon-3.0'):GetAddon('MeetingStone', true) then 
+            Actions:meetingStoneMixin() 
+        end
+    end)
+end
 
 function addon:OnEnable()
     Actions:initSlash()
@@ -74,7 +90,4 @@ function addon:OnEnable()
 
     replaceNativeUtilWithMenu()
     replaceSearchResult()
-
-    local MeetingStone = LibStub('AceAddon-3.0'):GetAddon('MeetingStone', true)
-    if MeetingStone then Actions:meetingStoneMixin() end
 end
