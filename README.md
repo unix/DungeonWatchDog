@@ -17,6 +17,9 @@ A dungeon finder filter with World of Warcraft
 
 #### Addon preview
 
+![preview1](http://static.wittsay.cc/wow/1.png)
 
+
+![preview2](http://static.wittsay.cc/wow/2.png)
 
 
