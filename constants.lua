@@ -3,7 +3,7 @@ local Constants = addon:NewModule('Constants')
 
 local infos = {
     ADDON_BASE_NAME = 'DungeonWatchDog',
-    VERSION = '2.1.1',
+    VERSION = '2.1.2',
     IGNORE_PLANEL_FRAME = 'ignorePanelFrame',
     EXPORT_PLANEL_FRAME = 'exportPanelFrame',
     KEYWORD_PLANEL_FRAME = 'keywordPanelFrame',
