@@ -90,7 +90,4 @@ function addon:OnEnable()
 
     replaceNativeUtilWithMenu()
     replaceSearchResult()
-
-    local MeetingStone = LibStub('AceAddon-3.0'):GetAddon('MeetingStone', true)
-    if MeetingStone then Actions:meetingStoneMixin() end
 end
