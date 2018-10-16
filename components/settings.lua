@@ -100,7 +100,7 @@ options = {
 
                         local Components = addon:GetModule('Components', true)
                         if not Components then return end
-                        Components:get('Ignores'):open()
+                        Components:get('IgnoreList'):open()
                         AceConfigDialog:Close(L.ADDON_SHOW_NAME)
                     end
                 },

@@ -52,8 +52,8 @@ local replaceNativeUtilWithMenu = function()
                 Actions:banPlayerWithID(id)
                 local Components = addon:GetModule('Components', true)
                 if Components then 
-                    local Ignores = Components:get('Ignores')
-                    Ignores:updateCountInShow()
+                    local IgnoreList = Components:get('IgnoreList')
+                    IgnoreList:updateWhenOpened()
                 end
             end,
             notCheckable = true,
