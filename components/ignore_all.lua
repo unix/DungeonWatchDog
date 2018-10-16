@@ -32,7 +32,7 @@ function IgnoreAll:banAllPlayers()
     Actions:banAllPlayers()
     local Components = addon:GetModule('Components', true)
     if Components then 
-        Components:get('Ignores'):updateCountInShow()
+        Components:get('IgnoreList'):updateWhenOpened()
     end
     collectgarbage('collect')
 end
