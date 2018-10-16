@@ -143,7 +143,7 @@ function IgnoreList:updateScrollPosition()
 end
 
 function IgnoreList:updateWhenOpened()
-    if self.frame:IsShown() then
+    if self.frame and self.frame:IsShown() then
         self:updatePlayersWithKeyWord(self.lastSearchText)
     end
 end
