@@ -3,11 +3,11 @@ A dungeon finder filter with World of Warcraft
 
 
 #### What can it help you ?
-- ignore a player in dungeon finder.
+- ignore a player in dungeon finder (or MeetingStone).
 - ignore all search results.
 - auto filtering of ad teams.
 - manage your ignore list.
-- export / import and share your ignore lsit.
+- export / import and share your ignore list.
 
 
 #### How do i use it ?

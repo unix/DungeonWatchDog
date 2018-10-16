@@ -10,17 +10,8 @@ function Actions:initSlash()
     SLASH_WATCHDOG2 = "/wd"
     SLASH_WATCHDOG3 = "/WD"
     SlashCmdList['WATCHDOG'] = function(param)
-        param = string.lower(param)
-        if param == 'show' then 
-            local Settings = addon:GetModule('Settings', true)
-            return Settings and Settings:Open()
-        end
-        if param == 'version' then
-            return self:log('v'..infos.VERSION)
-        end
-        self:log("Usage:")
-        self:log('/wd show  '..L.SLASH_TIPS_SHOW)
-        self:log('/wd version  '..L.SLASH_TIPS_VERSION)
+        local Settings = addon:GetModule('Settings', true)
+        return Settings and Settings:Open()
     end
 end
 
