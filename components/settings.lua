@@ -1,5 +1,6 @@
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
-local L = LibStub("AceLocale-3.0"):GetLocale('DungeonWatchDog', false)
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
 local AceConfig, AceConfigDialog, AceGUI  = LibStub('AceConfig-3.0'), LibStub('AceConfigDialog-3.0'), LibStub('AceGUI-3.0')
 local Settings = addon:NewModule('Settings')
 local infos = addon:GetModule('Constants'):GetInfos()

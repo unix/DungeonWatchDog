@@ -1,4 +1,5 @@
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
 local Components = addon:NewModule('Components')
 local Settings = addon:GetModule('Settings')
 local IgnoreAll = addon:GetModule('IgnoreAll')

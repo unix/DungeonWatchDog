@@ -1,9 +1,10 @@
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
 local AceComm = LibStub("AceComm-3.0")
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
 local Actions = addon:NewModule('Actions')
 local Utils = addon:GetModule('Utils')
 local infos = addon:GetModule('Constants'):GetInfos()
-local L = LibStub("AceLocale-3.0"):GetLocale('DungeonWatchDog', false)
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
 
 function Actions:initSlash()
     SLASH_WATCHDOG1 = "/watchdog"

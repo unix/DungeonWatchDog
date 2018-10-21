@@ -1,6 +1,6 @@
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
-local infos = addon:GetModule('Constants'):GetInfos()
-local L = LibStub("AceLocale-3.0"):NewLocale(infos.ADDON_BASE_NAME, "zhTW", false)
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
+local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhTW", false)
 if not L then return end
 
 L['ADDON_SHOW_NAME'] = '看門狗'

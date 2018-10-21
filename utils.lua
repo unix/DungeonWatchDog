@@ -1,5 +1,6 @@
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
-local L = LibStub("AceLocale-3.0"):GetLocale('DungeonWatchDog', false)
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
 local Utils = addon:NewModule('Utils')
 
 function Utils:encode(s)

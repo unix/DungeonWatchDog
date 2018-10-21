@@ -1,4 +1,5 @@
-local addon = LibStub('AceAddon-3.0'):NewAddon('DungeonWatchDog')
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):NewAddon(ADDON_NAME)
 local Init = addon:NewModule('Init')
 
 function Init:vars()
