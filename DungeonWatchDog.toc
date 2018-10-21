@@ -3,7 +3,7 @@
 ## Title-zhCN: 看门狗
 ## Notes: Ignore players in dungeon finder
 ## Notes-zhCN: 帮助您更优质的组建队伍
-## Version: 2.2.1
+## Version: 2.2.2
 ## SavedVariables: WATCHDOG_VARS
 ## SavedVariablesPerCharacter: WATCHDOG_DB
 ## LoadManagers: AddonLoader
