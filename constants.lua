@@ -11,6 +11,7 @@ local infos = {
     DEFAULT_EXPORT_SEP = '0Z0',
     EXPORT_TYPE_COVER = 'cover',
     EXPORT_TYPE_MERGE = 'merge',
+    PGF_NAME = 'PremadeGroupsFilter',
 }
 
 function Constants:GetInfos()
