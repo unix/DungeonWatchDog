@@ -1,5 +1,6 @@
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
-local L = LibStub("AceLocale-3.0"):GetLocale('DungeonWatchDog', false)
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
+local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
 local IgnoreAll = addon:NewModule('IgnoreAll')
 local infos = addon:GetModule('Constants'):GetInfos()
 local Utils = addon:GetModule('Utils')
@@ -7,13 +8,35 @@ local Actions = addon:GetModule('Actions')
 
 function IgnoreAll:OnInitialize()
     local panel = LFGListFrame.SearchPanel
-    panel.IgnoreAllBtn = CreateFrame('Button', nil, panel, 'UIMenuButtonStretchTemplate')
-    panel.IgnoreAllBtn:SetPoint('TOPRIGHT', panel, 'TOPRIGHT', -52, -28)
-    panel.IgnoreAllBtn:SetSize(90, 26)
-    panel.IgnoreAllBtn:SetText(L.IGNORE_ALL_BTN_TEXT)
-    panel.IgnoreAllBtn:SetNormalFontObject('GameFontNormal')
-    panel.IgnoreAllBtn:SetHighlightFontObject('GameFontHighlight')
-    panel.IgnoreAllBtn:SetScript('OnClick', function() self:showConfirm() end)
+    local btn = CreateFrame('Button', nil, panel, 'UIPanelButtonTemplate')
+    local showTooltip = function(title, desc)
+        GameTooltip:SetOwner(btn, 'ANCHOR_NONE')
+        GameTooltip:SetPoint('BOTTOMLEFT', btn, 'TOPRIGHT', 0, 0)
+        GameTooltip:AddLine(title)
+        GameTooltip:Show()
+    end
+    local hideTooltip = function()
+        GameTooltip:SetText(' ')
+        GameTooltip:Hide()
+    end
+
+    btn:SetPoint('TOPRIGHT', panel, 'TOPRIGHT', -50, -27)
+    btn:SetSize(50, 27)
+    btn:SetText(L.IGNORE_ALL_BTN_TEXT)
+    btn:SetNormalFontObject('GameFontNormal')
+    btn:SetHighlightFontObject('GameFontHighlight')
+
+    btn:SetScript('OnClick', function() self:showConfirm() end)
+    btn:SetScript('OnEnter', function()
+        showTooltip(L.IGNORE_ALL_BTN_TOOLTIP_TITLE)
+    end)
+    btn:SetScript('OnLeave', function() hideTooltip() end)
+    btn:SetScript('OnShow', function()
+        local _, _, _, loadable = GetAddOnInfo(infos.PGF_NAME)
+        if loadable then 
+            btn:SetPoint('TOPRIGHT', panel, 'TOPRIGHT', -102, -27)
+        end
+    end)
 
     StaticPopupDialogs['WATCH_DOG_IGNORE_ALL_CONFIRM'] = {
         text = L.IGNORE_ALL_CONFIRM_TEXT,

@@ -1,6 +1,6 @@
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
-local infos = addon:GetModule('Constants'):GetInfos()
-local L = LibStub("AceLocale-3.0"):NewLocale(infos.ADDON_BASE_NAME, "zhCN", false)
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
+local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhCN", false)
 if not L then return end
 
 L['ADDON_SHOW_NAME'] = '看门狗'
@@ -37,7 +37,8 @@ L['SLASH_TIPS_VERSION'] = '查看插件版本'
 L['CLEAR_BAN_LIST_SUCCESS'] = '已清除屏蔽列表，取消所有屏蔽'
 L['IGNORE_ALL_NOT_FOUND_PLAYER'] = '搜索结果中没有合适的玩家'
 L['IGNORE_ALL_COMPLETED'] = '已屏蔽 %s 个玩家'
-L['IGNORE_ALL_BTN_TEXT'] = '屏蔽所有'
+L['IGNORE_ALL_BTN_TEXT'] = '忽略'
+L['IGNORE_ALL_BTN_TOOLTIP_TITLE'] = '屏蔽所有的搜索结果'
 L['IGNORE_ALL_CONFIRM_TEXT'] = '看门狗: 这样做会屏蔽当前搜索结果的所有玩家，你确定吗？'
 
 L['MEETINGSTONE_APPLY_TEXT'] = '申请加入'

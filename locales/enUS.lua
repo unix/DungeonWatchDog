@@ -1,6 +1,6 @@
-local addon = LibStub('AceAddon-3.0'):GetAddon('DungeonWatchDog')
-local infos = addon:GetModule('Constants'):GetInfos()
-local L = LibStub("AceLocale-3.0"):NewLocale(infos.ADDON_BASE_NAME, "enUS", true)
+local ADDON_NAME = GetAddOnMetadata(..., 'Title')
+local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
+local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
 
 L['ADDON_SHOW_NAME'] = 'DUNGEON WATCH DOG'
@@ -36,7 +36,8 @@ L['SLASH_TIPS_VERSION'] = 'show addon version'
 L['CLEAR_BAN_LIST_SUCCESS'] = 'all ignore lists have been cleared'
 L['IGNORE_ALL_NOT_FOUND_PLAYER'] = 'no player found in search results'
 L['IGNORE_ALL_COMPLETED'] = '%s players have been ignored'
-L['IGNORE_ALL_BTN_TEXT'] = 'ignore all'
+L['IGNORE_ALL_BTN_TEXT'] = 'Ignore'
+L['IGNORE_ALL_BTN_TOOLTIP_TITLE'] = 'ignore all search results'
 L['IGNORE_ALL_CONFIRM_TEXT'] = 'WatchDog: This will ignore all players of the current search results. Are you sure ?'
 
 L['MEETINGSTONE_APPLY_TEXT'] = 'APPLY'
