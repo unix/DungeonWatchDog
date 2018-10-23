@@ -3,26 +3,38 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
 local infos = addon:GetModule('Constants'):GetInfos()
 local Actions = addon:GetModule('Actions')
-
+local pairs = pairs
 
 local replaceSearchResult = function()
     local _searchCopy = C_LFGList.GetSearchResults
     local limitLevel = Actions:findLimitItemLevel()
+    local defaultFilterToggle = WATCHDOG_DB.defaultFilterToggle
 
     C_LFGList.GetSearchResults = function()
-        local total, searchResults = _searchCopy()
+        local _, searchResults = _searchCopy()
         local players, lastSearchPlayers = {}, {}
-        local passed, lastPlayer = false, nil
+        local passed, lastPlayer, count, lastCount = nil, nil, 0, 0
+        Actions:updatePlayersCache()
 
         for _, id in pairs(searchResults) do
-            passed, lastPlayer = Actions:checkListInfo(id, limitLevel)
-            if passed then table.insert(players, id) end
-            if lastPlayer then table.insert(lastSearchPlayers, lastPlayer) end
-            passed, lastPlayer = false, nil
+            if id then
+                passed, lastPlayer = Actions:checkListInfo(id, limitLevel, defaultFilterToggle)
+                if passed then
+                    count = count + 1
+                    players[count] = id
+                end
+                if lastPlayer then
+                    lastCount = lastCount + 1
+                    lastSearchPlayers[lastCount] = lastPlayer
+                end
+                passed, lastPlayer = nil, nil
+            end
         end
+        
         -- record the results of the previous search
         WATCHDOG_VARS.LAST_SEARCH_RESULTS = lastSearchPlayers
-        return total, players
+        lastSearchPlayers, searchResults, count, lastCount = nil, nil, nil, nil
+        return count, players
     end
 end
 
@@ -56,6 +68,7 @@ local replaceNativeUtilWithMenu = function()
                     local IgnoreList = Components:get('IgnoreList')
                     IgnoreList:updateWhenOpened()
                 end
+                Components = nil
             end,
             notCheckable = true,
             disabled = nil,

@@ -6,6 +6,14 @@ local Utils = addon:GetModule('Utils')
 local infos = addon:GetModule('Constants'):GetInfos()
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
 
+function Actions:OnInitialize()
+    self:updatePlayersCache()
+end
+
+function Actions:updatePlayersCache()
+    self.playersCache = WATCHDOG_DB.players or {}
+end
+
 function Actions:initSlash()
     SLASH_WATCHDOG1 = "/watchdog"
     SLASH_WATCHDOG2 = "/wd"
@@ -53,7 +61,7 @@ end
 
 function Actions:isBannedPlayer(name)
     if not name then return nil end
-    return WATCHDOG_DB.players[name]
+    return self.playersCache[name]
 end
 
 function Actions:banPlayerWithName(name)
@@ -96,33 +104,24 @@ function Actions:importSettings(text, type)
     local index = string.match(text, infos.DEFAULT_EXPORT_SEP)
     if not index then return self:log(L.EXPORT_TEXT_ERROR) end
 
-    local str = Utils:decode(text)
-    local names = Utils:split(str, infos.DEFAULT_EXPORT_SEP)
+    self:log(L.EXPORT_TIPS_WITH_TYPE_COVER)
+    local names = Utils:split(Utils:decode(text), infos.DEFAULT_EXPORT_SEP)
     local players = {}
-    local count = 0
+    local name, count = nil, 0
 
     for i = 1, #names do
-        local name = names[i]
-        if name and string.len(name) > 1 then 
-            if not players[name] then count = count + 1 end
-            
+        name = names[i]
+        if name then 
+            count = count + 1
             players[name] = { status = 1, name = name }
-            if infos.EXPORT_TYPE_MERGE == type then 
-                WATCHDOG_DB.players[name] = { status = 1, name = name }
-            end
         end
+        name = nil
     end
 
-    if INFO.EXPORT_TYPE_COVER == type then
-        WATCHDOG_DB.players = players
-        self:log(L.EXPORT_TIPS_WITH_TYPE_COVER)
-    end
-    if INFO.EXPORT_TYPE_MERGE == type then
-        self:log(L.EXPORT_TIPS_WITH_TYPE_MERGE)
-    end
+    WATCHDOG_DB.players = players
     
     self:log(string.format(L.EXPORT_SUCCESS, count))
-    _G[infos.ADDON_BASE_NAME].Components.Export.close()
+    name, count, players, names = nil, nil, nil, nil
 end
 
 function Actions:findLimitItemLevel()
@@ -134,28 +133,34 @@ function Actions:findLimitItemLevel()
     return selfLevel - 50
 end
 
-function Actions:checkListInfo(id, limitLevel)
+function Actions:checkListInfo(id, limitLevel, defaultFilterToggle)
     
-    local passed, lastPlayer = false, nil
-    local info = { C_LFGList.GetSearchResultInfo(id) }
-    if not info then return passed, lastPlayer end
-    local ilvl, minutes, leaderName, members = info[6], (info[8] or 0) / 60, info[13], info[14]
-    
+    local passed, lastPlayer = nil, nil
+    local id, _, _, _, _, ilvl, _, minutes, bnet, char, guild, _, leaderName, members = C_LFGList.GetSearchResultInfo(id)
+    if not id then
+        passed = true
+        return passed, lastPlayer 
+    end
+
     -- ilvl == 0 or nil is not set
+    minutes = (minutes or 0) / 60
     local ilvlPassed = (not ilvl and true) or (ilvl == 0 and true) or (ilvl > limitLevel and true) or nil
     local memberPassed = not (minutes > 20 and members <= 1)
-    local defaultFilter = (not WATCHDOG_DB.defaultFilterToggle and true) or (ilvlPassed and memberPassed)
+    local defaultFilter = (not defaultFilterToggle and true) or (ilvlPassed and memberPassed)
 
     -- default filter 
     if not defaultFilter then return passed, lastPlayer end
 
-    if not leaderName then return true, nil end
+    if not leaderName then
+        passed = true
+        return passed, lastPlayer 
+    end
 
     if not self:isBannedPlayer(leaderName) then
         passed = true
 
         -- not includes BNetFriends / CharFriends / GuildMates
-        if info[9] == 0 and info[10] == 0 and info[11] == 0 then
+        if bnet == 0 and char == 0 and guild == 0 then
             lastPlayer = { name = leaderName, id = id }
         end
     end
@@ -169,10 +174,11 @@ function Actions:meetingStoneMixin()
     if not LfgService or not BrowsePanel then return end
     local _cacheCopy = LfgService._CacheActivity
     local limitLevel = self:findLimitItemLevel()
+    local defaultFilterToggle = WATCHDOG_DB.defaultFilterToggle
 
     LfgService._CacheActivity = function(s, id)
         if not id then return end
-        local passed = self:checkListInfo(id, limitLevel)
+        local passed = self:checkListInfo(id, limitLevel, defaultFilterToggle)
         if not passed then return end
         return _cacheCopy(s, id)
     end
