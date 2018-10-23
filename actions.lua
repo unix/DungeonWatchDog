@@ -137,7 +137,7 @@ function Actions:checkListInfo(id, limitLevel, defaultFilterToggle)
     
     local passed, lastPlayer = nil, nil
     local id, _, _, _, _, ilvl, _, minutes, bnet, char, guild, _, leaderName, members = C_LFGList.GetSearchResultInfo(id)
-    if not id or id then
+    if not id then
         passed = true
         return passed, lastPlayer 
     end
