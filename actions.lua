@@ -104,33 +104,24 @@ function Actions:importSettings(text, type)
     local index = string.match(text, infos.DEFAULT_EXPORT_SEP)
     if not index then return self:log(L.EXPORT_TEXT_ERROR) end
 
-    local str = Utils:decode(text)
-    local names = Utils:split(str, infos.DEFAULT_EXPORT_SEP)
+    self:log(L.EXPORT_TIPS_WITH_TYPE_COVER)
+    local names = Utils:split(Utils:decode(text), infos.DEFAULT_EXPORT_SEP)
     local players = {}
-    local count = 0
+    local name, count = nil, 0
 
     for i = 1, #names do
-        local name = names[i]
-        if name and string.len(name) > 1 then 
-            if not players[name] then count = count + 1 end
-            
+        name = names[i]
+        if name then 
+            count = count + 1
             players[name] = { status = 1, name = name }
-            if infos.EXPORT_TYPE_MERGE == type then 
-                WATCHDOG_DB.players[name] = { status = 1, name = name }
-            end
         end
+        name = nil
     end
 
-    if INFO.EXPORT_TYPE_COVER == type then
-        WATCHDOG_DB.players = players
-        self:log(L.EXPORT_TIPS_WITH_TYPE_COVER)
-    end
-    if INFO.EXPORT_TYPE_MERGE == type then
-        self:log(L.EXPORT_TIPS_WITH_TYPE_MERGE)
-    end
+    WATCHDOG_DB.players = players
     
     self:log(string.format(L.EXPORT_SUCCESS, count))
-    _G[infos.ADDON_BASE_NAME].Components.Export.close()
+    name, count, players, names = nil, nil, nil, nil
 end
 
 function Actions:findLimitItemLevel()
