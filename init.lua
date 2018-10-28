@@ -4,7 +4,7 @@ local Init = addon:NewModule('Init')
 
 function Init:getDefaultSettings()
     return {
-        version = 4,
+        version = 5,
         players = {},
         defaultFilterToggle = true,
         versionMessageToggle = true,
@@ -12,7 +12,7 @@ function Init:getDefaultSettings()
         shareCount = 0,
         shareLimit = 500,
         shareCountTime = time(),
-        shareCountTimeLimit = 10,
+        shareCountTimeLimit = 86400,
         ignoreTimeLimit = 259200,
     }
 end
