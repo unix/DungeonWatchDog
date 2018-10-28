@@ -15,7 +15,8 @@ function Share:OnInitialize()
     
     self.friends = {}
     self.BNCount = 0
-    self.SocialCount = 0
+    self.socialCount = 0
+    self.shareCount = 0
     self.ignoreCount = Utils:tableLength(WATCHDOG_DB.players)
     self.faction = UnitFactionGroup('player')
 
@@ -23,7 +24,7 @@ function Share:OnInitialize()
     self:updateBNCount()
     self:updateBNNames()
     self:updateSocialNames()
-    self:updateIgnoreList()
+    -- self:updateIgnoreList()
 end
 
 function Share:checkIgnoreCount()
@@ -35,7 +36,7 @@ end
 function Share:updateBNCount()
     self.BNCount = BNGetNumFriends()
     local _, online = GetNumFriends()
-    self.SocialCount = online
+    self.socialCount = online
 end
 
 function Share:updateBNNames()
@@ -43,16 +44,22 @@ function Share:updateBNNames()
         if friend[3] ~= 'WoW' then return end
         if friend[6] ~= self.faction then return end
 
-        if friend[2] then
+        -- sometimes there are deplays in BN, name and realm must be checked.
+        if Utils:notEmptyStr(friend[2], friend[4]) then
             local name = friend[2]..'-'..friend[4]
-            self.friends[name] = 1
+
+            -- update only once.
+            if not self.friends[name] then 
+                self:sendIgnoreList(name)
+                self.friends[name] = 1
+            end
         end
     end
 
     local accounts = 0
     for i = 1, self.BNCount do
         accounts = BNGetNumFriendGameAccounts(i)
-        if accounts ~= 0 then
+        if accounts and accounts ~= 0 then
             for k = 1, accounts do
                 updateHandle({ BNGetFriendGameAccountInfo(i, k) })
             end
@@ -63,10 +70,14 @@ end
 
 function Share:updateSocialNames()
     local realm = '-'..GetRealmName()
-    for i = 1, self.SocialCount do
+    for i = 1, self.socialCount do
         local name, _, _, _, isOnline = GetFriendInfo(i)
-        if name and isOnline then
-            self.friends[name..realm] = 1
+        if isOnline and Utils:notEmptyStr(name) then
+            local full = name..realm
+            if Utils:notEmptyStr(full) and not self.friends[full] then
+                self:sendIgnoreList(full)
+                self.friends[full] = 1
+            end
         end
     end
 end
@@ -85,7 +96,7 @@ function Share:sendIgnoreList(name, once)
 
     local str = Actions:ExportSettings()
     local type = (once and infos.ADDON_COMM_IGNORE_SHARE_ONCE) or infos.ADDON_COMM_IGNORE_SHARE
-    if not str or str == '' then str = infos.DEFAULT_EXPORT_SEP end
+    if not Utils:notEmptyStr(str) then str = infos.DEFAULT_EXPORT_SEP end
     AceComm:SendCommMessage(type, Utils:encodeCommMessages(str), 'WHISPER', name)
 end
 
@@ -104,14 +115,9 @@ function Share:OnConnectionCreation(e, text, once)
 end
 
 function Share:updateShareCount()
-    local t = time()
-    if not WATCHDOG_DB.shareCountTime then 
-        WATCHDOG_DB.shareCountTime = t
-    end
-    if (t - WATCHDOG_DB.shareCountTime) > WATCHDOG_DB.shareCountTimeLimit then
-        WATCHDOG_DB.shareCountTime = t
-        WATCHDOG_DB.shareCount = 0
-    end
+    self.shareCount = self.shareCount + 1
+end
 
-    WATCHDOG_DB.shareCount = WATCHDOG_DB.shareCount + 1
+function Share:getShareCount()
+    return self.shareCount or 0
 end
