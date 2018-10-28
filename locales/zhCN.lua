@@ -71,6 +71,10 @@ L['SETTINGS_CLEAR_BTN1'] = '立即清理所有'
 L['SETTINGS_CLEAR_TIME_DESC'] = '\n\n\n清理列表内近期未活动的玩家 (失效玩家)\n'
 L['SETTINGS_CLEAR_TIME_BTN1'] = '清理失效玩家'
 L['SETTINGS_CLEAR_CONFIR'] = '这样做会清空屏蔽列表，并且无法恢复，你确定仍旧要这样做吗?'
+L['SETTINGS_SHARE_NAME'] = '共享'
+L['SETTINGS_SHARE_HEADER'] = '共享'
+L['SETTINGS_SHARE_DESC'] = '\n看门狗会自动与你的所有好友共享屏蔽列表。\n\n注意: 当你的屏蔽列表数量高于 %s 时，将不会再自动共享数据，除非你及时清理它们\n\n'
+L['SETTINGS_SHARE_TOGGLE'] = '自动共享'
 
 L['SHARE_IGNORE_LIMIT'] = '您的自动共享已停止，因为屏蔽列表数量超过了 %s，请及时清理。'
 

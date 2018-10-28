@@ -38,6 +38,7 @@ options = {
                         info.options.args.portalOptions.args.portalStatusAll.name = L.SETTINGS_PORTAL_STATUS_ALL..count
                         info.options.args.portalOptions.args.portalShareCount.name = L.SETTINGS_PORTAL_SHARE_COUNT..shareCount
                         info.options.args.portalOptions.args.portalVersion.name = L.SETTINGS_PORTAL_VERSION..infos.VERSION
+                        info.options.args.shareOptions.args.shareDesc.name = string.format(L.SETTINGS_SHARE_DESC, WATCHDOG_DB.shareLimit)
                         return (WATCHDOG_DB.defaultFilterToggle and true) or false
                     end,
                     set = function (info, t)
@@ -80,22 +81,22 @@ options = {
             },
         },
         shareOptions = {
-            name = '共享',
+            name = L.SETTINGS_SHARE_NAME,
             type = 'group',
             order = 2,
             args = {
                 shareHander = {
-                    name = '共享',
+                    name = L.SETTINGS_SHARE_HEADER,
                     type = 'header',
                     order = 1,
                 },
                 shareDesc = {
-                    name = '\n看门狗会自动与你的战网好友共享屏蔽列表。\n\n注意: 当你的屏蔽列表数量高于 500 时，将不会再自动共享数据，除非你及时清理它们\n\n',
+                    name = ' ',
                     type = 'description',
                     order = 2,
                 },
                 shareToggle = {
-                    name = '自动共享',
+                    name = L.SETTINGS_SHARE_TOGGLE,
                     type = 'toggle',
                     order = 3,
                     width = '0.5',

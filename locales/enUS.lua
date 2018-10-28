@@ -70,6 +70,10 @@ L['SETTINGS_CLEAR_BTN1'] = 'Clear up all'
 L['SETTINGS_CLEAR_TIME_DESC'] = '\n\n\nClean up the recent inactive players in the ignore list (expired players)\n'
 L['SETTINGS_CLEAR_TIME_BTN1'] = 'Clean up expired players'
 L['SETTINGS_CLEAR_CONFIR'] = 'This operation will empty ignore list and cannot be resumed. Are you sure you want to do that?'
+L['SETTINGS_SHARE_NAME'] = 'Share'
+L['SETTINGS_SHARE_HEADER'] = 'Share'
+L['SETTINGS_SHARE_DESC'] = '\nWatchdog will automatically share the ignore list with your friends.\n\nTips: Data will not be shared when your ignore list is above %s, unless you clean them up in time.\n\n'
+L['SETTINGS_SHARE_TOGGLE'] = 'Auto Share'
 
 L['SHARE_IGNORE_LIMIT'] = 'Your automatic sharing has stopped, because the number of ignored lists exceeds %s, please clear up in time.'
 
