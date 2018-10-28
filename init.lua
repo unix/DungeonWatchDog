@@ -10,6 +10,7 @@ function Init:getDefaultSettings()
         versionMessageToggle = true,
         shareToggle = true,
         shareLimit = 500,
+        ignoreTimeLimit = 259200,
     }
 end
 

@@ -93,6 +93,7 @@ end
 function Actions:unbanPlayerWithTime(limitTime)
     local players, next = WATCHDOG_DB.players, {}
     local lastCount, nextCount, now = 0, 0, time()
+    limitTime = limitTime or 259200
                     
     for k, v in pairs(players) do
         lastCount = lastCount + 1

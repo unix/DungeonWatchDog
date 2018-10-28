@@ -221,7 +221,7 @@ options = {
                     order = 5,
                     func = function()
                         PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
-                        Actions:unbanPlayerWithTime(259200)
+                        Actions:unbanPlayerWithTime(WATCHDOG_DB.ignoreTimeLimit)
                     end
                 },
             },
