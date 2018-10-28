@@ -1,6 +1,6 @@
 local ADDON_NAME = GetAddOnMetadata(..., 'Title')
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
-local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhCN", false)
+local L = LibStub('AceLocale-3.0'):NewLocale(ADDON_NAME, 'zhCN', false)
 if not L then return end
 
 L['ADDON_SHOW_NAME'] = '看门狗'
@@ -34,6 +34,7 @@ L['SLASH_TIPS_EXPORT'] = '展示导入与导出面板'
 L['SLASH_TIPS_CLEAR'] = '清空屏蔽列表 (取消所有屏蔽)'
 L['SLASH_TIPS_VERSION'] = '查看插件版本'
 L['CLEAR_BAN_LIST_SUCCESS'] = '已清除屏蔽列表，取消所有屏蔽'
+L['CLEAR_BAN_LIST_TIME_SUCCESS'] = '已清除失效玩家，共计 %s 个'
 L['IGNORE_ALL_NOT_FOUND_PLAYER'] = '搜索结果中没有合适的玩家'
 L['IGNORE_ALL_COMPLETED'] = '已屏蔽 %s 个玩家'
 L['IGNORE_ALL_BTN_TEXT'] = '忽略'
@@ -51,7 +52,8 @@ L['SETTINGS_PORTAL_HEADER'] = '全局'
 L['SETTINGS_PORTAL_DESC'] = '\n全局设置\n\n'
 L['SETTINGS_PORTAL_TOGGLE1'] = '启用默认过滤'
 L['SETTINGS_PORTAL_TOGGLE2'] = '有新版本时提示我'
-L['SETTINGS_PORTAL_STATUS_ALL'] = '\n\n\n屏蔽列表数量: '
+L['SETTINGS_PORTAL_SHARE_COUNT'] = '\n\n\n最近共享: '
+L['SETTINGS_PORTAL_STATUS_ALL'] = '\n屏蔽列表总数: '
 L['SETTINGS_PORTAL_VERSION'] = '\n当前版本: v'
 L['SETTINGS_IGNORE_LIST_NAME'] = '屏蔽列表'
 L['SETTINGS_IGNORE_LIST_HEADER'] = '屏蔽列表'
@@ -62,10 +64,18 @@ L['SETTINGS_EXPORT_HEADER'] = '导入/导出'
 L['SETTINGS_EXPORT_DESC'] = '\n你可以通过导出功能与他人分享你的屏蔽列表，同时也能导入一段屏蔽字符串。\n\n导入一段字符会覆盖你原有的屏蔽列表。\n'
 L['SETTINGS_EXPORT_BTN1'] = '生成导出字符串'
 L['SETTINGS_EXPORT_INPUT'] = '导出字符串'
-L['SETTINGS_CLEAR_NAME'] = '清理所有'
-L['SETTINGS_CLEAR_HEADER'] = '清理所有'
-L['SETTINGS_CLEAR_DESC'] = '\n这会清除所有的屏蔽列表，并且不可恢复。\n\n'
+L['SETTINGS_CLEAR_NAME'] = '清理列表'
+L['SETTINGS_CLEAR_HEADER'] = '清理列表'
+L['SETTINGS_CLEAR_DESC'] = '\n这会清除所有的屏蔽列表，并且不可恢复。\n'
 L['SETTINGS_CLEAR_BTN1'] = '立即清理所有'
+L['SETTINGS_CLEAR_TIME_DESC'] = '\n\n\n清理列表内近期未活动的玩家 (失效玩家)\n'
+L['SETTINGS_CLEAR_TIME_BTN1'] = '清理失效玩家'
 L['SETTINGS_CLEAR_CONFIR'] = '这样做会清空屏蔽列表，并且无法恢复，你确定仍旧要这样做吗?'
+L['SETTINGS_SHARE_NAME'] = '共享'
+L['SETTINGS_SHARE_HEADER'] = '共享'
+L['SETTINGS_SHARE_DESC'] = '\n看门狗会自动与你的所有好友共享屏蔽列表。\n\n注意: 当你的屏蔽列表数量高于 %s 时，将不会再自动共享数据，除非你及时清理它们\n\n'
+L['SETTINGS_SHARE_TOGGLE'] = '自动共享'
+
+L['SHARE_IGNORE_LIMIT'] = '您的自动共享已停止，因为屏蔽列表数量超过了 %s，请及时清理。'
 
 

@@ -12,6 +12,9 @@ local infos = {
     EXPORT_TYPE_COVER = 'cover',
     EXPORT_TYPE_MERGE = 'merge',
     PGF_NAME = 'PremadeGroupsFilter',
+    ADDON_COMM_BASE = ADDON_NAME,
+    ADDON_COMM_IGNORE_SHARE = 'WATCH_DOG_IG',
+    ADDON_COMM_IGNORE_SHARE_ONCE = 'WATCH_DOG_IG_O',
 }
 
 function Constants:GetInfos()

@@ -1,6 +1,6 @@
 local ADDON_NAME = GetAddOnMetadata(..., 'Title')
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
+local L = LibStub('AceLocale-3.0'):GetLocale(ADDON_NAME, false)
 local IgnoreAll = addon:NewModule('IgnoreAll')
 local infos = addon:GetModule('Constants'):GetInfos()
 local Utils = addon:GetModule('Utils')

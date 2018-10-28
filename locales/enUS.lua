@@ -1,6 +1,6 @@
 local ADDON_NAME = GetAddOnMetadata(..., 'Title')
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
-local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
+local L = LibStub('AceLocale-3.0'):NewLocale(ADDON_NAME, 'enUS', true)
 
 
 L['ADDON_SHOW_NAME'] = 'DUNGEON WATCH DOG'
@@ -33,6 +33,7 @@ L['SLASH_TIPS_EXPORT'] = 'show export panel'
 L['SLASH_TIPS_CLEAR'] = 'clear all ignore lists'
 L['SLASH_TIPS_VERSION'] = 'show addon version'
 L['CLEAR_BAN_LIST_SUCCESS'] = 'all ignore lists have been cleared'
+L['CLEAR_BAN_LIST_TIME_SUCCESS'] = 'cleared expired player，a total of %s players'
 L['IGNORE_ALL_NOT_FOUND_PLAYER'] = 'no player found in search results'
 L['IGNORE_ALL_COMPLETED'] = '%s players have been ignored'
 L['IGNORE_ALL_BTN_TEXT'] = 'Ignore'
@@ -50,7 +51,8 @@ L['SETTINGS_PORTAL_HEADER'] = 'Global'
 L['SETTINGS_PORTAL_DESC'] = '\nGlobal Settings\n\n'
 L['SETTINGS_PORTAL_TOGGLE1'] = 'Enable default filter'
 L['SETTINGS_PORTAL_TOGGLE2'] = 'Remind me when version updated'
-L['SETTINGS_PORTAL_STATUS_ALL'] = '\n\n\nIgnore list count: '
+L['SETTINGS_PORTAL_SHARE_COUNT'] = '\n\n\nRecently shared: '
+L['SETTINGS_PORTAL_STATUS_ALL'] = '\nIgnore list count: '
 L['SETTINGS_PORTAL_VERSION'] = '\nCurrent version: v'
 L['SETTINGS_IGNORE_LIST_NAME'] = 'Ignore list'
 L['SETTINGS_IGNORE_LIST_HEADER'] = 'Ignore list'
@@ -61,10 +63,17 @@ L['SETTINGS_EXPORT_HEADER'] = 'Improt / Export'
 L['SETTINGS_EXPORT_DESC'] = '\nYou can share your list with others by Export, and you can also import a string.\n\nImporting a string will cover your ignore list.\n'
 L['SETTINGS_EXPORT_BTN1'] = 'Generate export string'
 L['SETTINGS_EXPORT_INPUT'] = 'Export string'
-L['SETTINGS_CLEAR_NAME'] = 'Clean'
-L['SETTINGS_CLEAR_HEADER'] = 'Clean up all'
-L['SETTINGS_CLEAR_DESC'] = '\nThis clears all ignore lists and is not recoverable.\n\n'
-L['SETTINGS_CLEAR_BTN1'] = 'Clear up'
+L['SETTINGS_CLEAR_NAME'] = 'Clean up'
+L['SETTINGS_CLEAR_HEADER'] = 'Clean up'
+L['SETTINGS_CLEAR_DESC'] = '\nThis clears all ignore lists and is not recoverable.\n'
+L['SETTINGS_CLEAR_BTN1'] = 'Clear up all'
+L['SETTINGS_CLEAR_TIME_DESC'] = '\n\n\nClean up the recent inactive players in the ignore list (expired players)\n'
+L['SETTINGS_CLEAR_TIME_BTN1'] = 'Clean up expired players'
 L['SETTINGS_CLEAR_CONFIR'] = 'This operation will empty ignore list and cannot be resumed. Are you sure you want to do that?'
+L['SETTINGS_SHARE_NAME'] = 'Share'
+L['SETTINGS_SHARE_HEADER'] = 'Share'
+L['SETTINGS_SHARE_DESC'] = '\nWatchdog will automatically share the ignore list with your friends.\n\nTips: Data will not be shared when your ignore list is above %s, unless you clean them up in time.\n\n'
+L['SETTINGS_SHARE_TOGGLE'] = 'Auto Share'
 
+L['SHARE_IGNORE_LIMIT'] = 'Your automatic sharing has stopped, because the number of ignored lists exceeds %s, please clear up in time.'
 

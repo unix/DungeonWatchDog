@@ -1,6 +1,6 @@
 local ADDON_NAME = GetAddOnMetadata(..., 'Title')
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
+local L = LibStub('AceLocale-3.0'):GetLocale(ADDON_NAME, false)
 local AceConfig, AceConfigDialog, AceGUI  = LibStub('AceConfig-3.0'), LibStub('AceConfigDialog-3.0'), LibStub('AceGUI-3.0')
 local Settings = addon:NewModule('Settings')
 local infos = addon:GetModule('Constants'):GetInfos()
@@ -34,8 +34,11 @@ options = {
                     tristate = false,
                     get = function (info)
                         local count = Utils:tableLength(WATCHDOG_DB.players)
+                        local shareCount = WATCHDOG_VARS.SHARE_COUNT or 0
                         info.options.args.portalOptions.args.portalStatusAll.name = L.SETTINGS_PORTAL_STATUS_ALL..count
+                        info.options.args.portalOptions.args.portalShareCount.name = L.SETTINGS_PORTAL_SHARE_COUNT..shareCount
                         info.options.args.portalOptions.args.portalVersion.name = L.SETTINGS_PORTAL_VERSION..infos.VERSION
+                        info.options.args.shareOptions.args.shareDesc.name = string.format(L.SETTINGS_SHARE_DESC, WATCHDOG_DB.shareLimit)
                         return (WATCHDOG_DB.defaultFilterToggle and true) or false
                     end,
                     set = function (info, t)
@@ -60,22 +63,57 @@ options = {
                         WATCHDOG_DB.versionMessageToggle = t
                     end
                 },
-                portalStatusAll = {
+                portalShareCount = {
                     name = ' ',
                     type = 'description',
                     order = 6,
                 },
-                portalVersion = {
+                portalStatusAll = {
                     name = ' ',
                     type = 'description',
                     order = 7,
+                },
+                portalVersion = {
+                    name = ' ',
+                    type = 'description',
+                    order = 8,
+                },
+            },
+        },
+        shareOptions = {
+            name = L.SETTINGS_SHARE_NAME,
+            type = 'group',
+            order = 2,
+            args = {
+                shareHander = {
+                    name = L.SETTINGS_SHARE_HEADER,
+                    type = 'header',
+                    order = 1,
+                },
+                shareDesc = {
+                    name = ' ',
+                    type = 'description',
+                    order = 2,
+                },
+                shareToggle = {
+                    name = L.SETTINGS_SHARE_TOGGLE,
+                    type = 'toggle',
+                    order = 3,
+                    width = '0.5',
+                    tristate = false,
+                    get = function (info)
+                        return (WATCHDOG_DB.shareToggle and true) or false
+                    end,
+                    set = function (info, t)
+                        WATCHDOG_DB.shareToggle = t
+                    end
                 },
             },
         },
         ignoreListOptions = {
             name = L.SETTINGS_IGNORE_LIST_NAME,
             type = 'group',
-            order = 2,
+            order = 3,
             args = {
                 ignoreListHander = {
                     name = L.SETTINGS_IGNORE_LIST_HEADER,
@@ -110,7 +148,7 @@ options = {
         exportOptions={
             name = L.SETTINGS_EXPORT_NAME,
             type = 'group',
-            order = 3,
+            order = 4,
             args = {
                 exportHander = {
                     name = L.SETTINGS_EXPORT_HEADER,
@@ -128,16 +166,8 @@ options = {
                     width = '0.5',
                     order = 4,
                     func = function(info)
-                        local players, str, len = WATCHDOG_DB.players, infos.DEFAULT_EXPORT_SEP, 0
-                    
-                        for k, v in pairs(players) do
-                            len = len + 1
-                            str = str..k..infos.DEFAULT_EXPORT_SEP
-                        end
-                        if len == 0 then str = '' end
-                    
                         info.options.args.exportOptions.args.exportInput.get = function()
-                            return Utils:encode(str)
+                            return Actions:ExportSettings()
                         end
                     end,
                 },
@@ -149,7 +179,7 @@ options = {
                     order = 5,
                     multiline = true,
                     set = function(info, val) 
-                        Actions:importSettings(val, infos.EXPORT_TYPE_COVER)
+                        Actions:importSettings(val)
                     end,
                 },
             }
@@ -173,9 +203,25 @@ options = {
                     name = L.SETTINGS_CLEAR_BTN1,
                     type = 'execute',
                     width = '0.5',
+                    order = 3,
                     func = function()
                         PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
                         StaticPopup_Show('WATCH_DOG_CANCEL_ALL_CONFIRM')
+                    end
+                },
+                ignoreClearWithTimeDesc = {
+                    name = L.SETTINGS_CLEAR_TIME_DESC,
+                    type = 'description',
+                    order = 4,
+                },
+                ignoreClearWithTimeBtn1 = {
+                    name = L.SETTINGS_CLEAR_TIME_BTN1,
+                    type = 'execute',
+                    width = '0.5',
+                    order = 5,
+                    func = function()
+                        PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
+                        Actions:unbanPlayerWithTime(WATCHDOG_DB.ignoreTimeLimit)
                     end
                 },
             },
