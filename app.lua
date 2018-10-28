@@ -105,5 +105,4 @@ function addon:OnEnable()
 
     replaceNativeUtilWithMenu()
     replaceSearchResult()
-    hookSearchBoxEnterPressed()
 end
