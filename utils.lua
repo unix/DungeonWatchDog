@@ -7,6 +7,16 @@ function Utils:OnInitialize()
     self.name = UnitName('player')..'-'..GetRealmName()
 end
 
+function Utils:notEmptyStr(...)
+    local notEmpty = true
+    for k, str in pairs({...}) do
+        if not str or str == '' then 
+            notEmpty = false
+        end
+    end
+    return notEmpty
+end
+
 function Utils:encode(s)
     local next = string.gsub(s, '([^%w%.%- ])', function(c) 
         return string.format('%%%02X', string.byte(c)) 
