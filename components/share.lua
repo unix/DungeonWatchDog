@@ -12,7 +12,7 @@ function Share:OnInitialize()
     self:RegisterMessage('NETWORKS_CONNECTION_CREATION', 'OnConnectionCreation')
 
     if not WATCHDOG_DB.shareToggle then return end
-
+    
     self.friends = {}
     self.BNCount = 0
     self.SocialCount = 0
@@ -104,8 +104,14 @@ function Share:OnConnectionCreation(e, text, once)
 end
 
 function Share:updateShareCount()
-    if not WATCHDOG_VARS.SHARE_COUNT then 
-        WATCHDOG_VARS.SHARE_COUNT = 0
+    local t = time()
+    if not WATCHDOG_DB.shareCountTime then 
+        WATCHDOG_DB.shareCountTime = t
     end
-    WATCHDOG_VARS.SHARE_COUNT = WATCHDOG_VARS.SHARE_COUNT + 1
+    if (t - WATCHDOG_DB.shareCountTime) > WATCHDOG_DB.shareCountTimeLimit then
+        WATCHDOG_DB.shareCountTime = t
+        WATCHDOG_DB.shareCount = 0
+    end
+
+    WATCHDOG_DB.shareCount = WATCHDOG_DB.shareCount + 1
 end
