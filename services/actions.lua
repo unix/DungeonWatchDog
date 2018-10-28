@@ -186,10 +186,10 @@ function Actions:findLimitItemLevel()
     return selfLevel - 50
 end
 
-function Actions:checkListInfo(id, limitLevel, defaultFilterToggle)
+function Actions:checkListInfo(searchID, limitLevel, defaultFilterToggle)
     
     local passed, lastPlayer = nil, nil
-    local id, _, _, _, _, ilvl, _, minutes, bnet, char, guild, _, leaderName, members = C_LFGList.GetSearchResultInfo(id)
+    local id, _, _, _, _, ilvl, _, minutes, bnet, char, guild, _, leaderName, members = C_LFGList.GetSearchResultInfo(searchID)
     if not id then
         passed = true
         return passed, lastPlayer 
@@ -205,6 +205,7 @@ function Actions:checkListInfo(id, limitLevel, defaultFilterToggle)
     if not defaultFilter then return passed, lastPlayer end
 
     if not leaderName then
+        C_Timer.After(0.5, function() self:fixLeaderName(id) end)
         passed = true
         return passed, lastPlayer 
     end
@@ -218,6 +219,14 @@ function Actions:checkListInfo(id, limitLevel, defaultFilterToggle)
         end
     end
     return passed, lastPlayer
+end
+
+function Actions:fixLeaderName(id)
+    local info = { C_LFGList.GetSearchResultInfo(id) }
+    if not info[13] then return end
+    if info[9] ~= 0 or info[10] ~= 0 or info[11] ~= 0 then return end
+    if not WATCHDOG_VARS.LAST_SEARCH_RESULTS then WATCHDOG_VARS.LAST_SEARCH_RESULTS = {} end
+    table.insert(WATCHDOG_VARS.LAST_SEARCH_RESULTS, { name = info[13], id = id })
 end
 
 function Actions:meetingStoneMixin()
