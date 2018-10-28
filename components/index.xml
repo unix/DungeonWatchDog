@@ -10,6 +10,7 @@
 			</Slider>
 		</Frames>
 	</ScrollFrame>
+	<Script file="share.lua" />
 	<Script file="ignore_list.lua" />
 	<Script file="ignore_all.lua" />
   <Script file="settings.lua" />

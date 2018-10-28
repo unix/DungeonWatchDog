@@ -1,10 +1,10 @@
 local ADDON_NAME = GetAddOnMetadata(..., 'Title')
-local AceComm = LibStub("AceComm-3.0")
+local AceComm = LibStub('AceComm-3.0')
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
-local Actions = addon:NewModule('Actions')
+local Actions = addon:NewModule('Actions', 'AceEvent-3.0')
 local Utils = addon:GetModule('Utils')
 local infos = addon:GetModule('Constants'):GetInfos()
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
+local L = LibStub('AceLocale-3.0'):GetLocale(ADDON_NAME, false)
 
 function Actions:OnInitialize()
     self:updatePlayersCache()
@@ -15,9 +15,9 @@ function Actions:updatePlayersCache()
 end
 
 function Actions:initSlash()
-    SLASH_WATCHDOG1 = "/watchdog"
-    SLASH_WATCHDOG2 = "/wd"
-    SLASH_WATCHDOG3 = "/WD"
+    SLASH_WATCHDOG1 = '/watchdog'
+    SLASH_WATCHDOG2 = '/wd'
+    SLASH_WATCHDOG3 = '/WD'
     SlashCmdList['WATCHDOG'] = function(param)
         local Settings = addon:GetModule('Settings', true)
         return Settings and Settings:Open()
@@ -35,15 +35,28 @@ function Actions:initAddonMessage()
                 or (IsInInstance() and 'INSTANCE_CHAT')
                 or nil
         if not type then return end
-        AceComm:SendCommMessage(infos.ADDON_BASE_NAME, versionString, type)
+        AceComm:SendCommMessage(infos.ADDON_COMM_BASE, versionString, type)
     end)
-    AceComm:RegisterComm(infos.ADDON_BASE_NAME, function(prefix, text)
-        if prefix ~= infos.ADDON_BASE_NAME or not text then return end
+    AceComm:RegisterComm(infos.ADDON_COMM_BASE, function(prefix, text)
+        if prefix ~= infos.ADDON_COMM_BASE or not text then return end
         if not string.find(text, 'version') then return end
         local major, minor, revision = string.match(text, 'version:(%d).(%d).(%d)')
         if not major or not minor or not revision then return end
         self:compareVersion(major, minor, revision)
     end)
+    AceComm:RegisterComm(infos.ADDON_COMM_IGNORE_SHARE, function(prefix, text)
+        if prefix ~= infos.ADDON_COMM_IGNORE_SHARE or not text then return end
+        self:SendMessage('NETWORKS_CONNECTION_CREATION', text)
+    end)
+    AceComm:RegisterComm(infos.ADDON_COMM_IGNORE_SHARE_ONCE, function(prefix, text)
+        if prefix ~= infos.ADDON_COMM_IGNORE_SHARE_ONCE or not text then return end
+        self:SendMessage('NETWORKS_CONNECTION_CREATION', text, true)
+    end)
+end
+
+function Actions:isBannedPlayer(name)
+    if not name then return nil end
+    return self.playersCache[name]
 end
 
 function Actions:banPlayerWithID(id)
@@ -53,21 +66,16 @@ function Actions:banPlayerWithID(id)
     if leaderName == nil then return SendSystemMessage(L.NOT_FOUND_PLAYER_NAME) end
 
     if not WATCHDOG_DB.players[leaderName] then 
-        WATCHDOG_DB.players[leaderName] = { status = 1, name = leaderName }
+        WATCHDOG_DB.players[leaderName] = { status = 1, name = leaderName, time = time() }
         C_LFGList.ReportSearchResult(id, 'lfglistname')
         self:log(leaderName..' '..L.ACTION_BAN_MESSAGE)
     end
 end
 
-function Actions:isBannedPlayer(name)
-    if not name then return nil end
-    return self.playersCache[name]
-end
-
 function Actions:banPlayerWithName(name)
     if not name then return end
     if WATCHDOG_DB.players[name] then return end
-    WATCHDOG_DB.players[name] = { status = 1, name = name }
+    WATCHDOG_DB.players[name] = { status = 1, name = name, time = time() }
     self:log(name..' '..L.ACTION_BAN_MESSAGE)
 end
 
@@ -80,6 +88,22 @@ function Actions:unbanPlayerWithName(name)
     end
     WATCHDOG_DB.players = next
     self:log(name..' '..L.ACTION_UNBAN_MESSAGE)
+end
+
+function Actions:unbanPlayerWithTime(limitTime)
+    local players, next = WATCHDOG_DB.players, {}
+    local lastCount, nextCount, now = 0, 0, time()
+                    
+    for k, v in pairs(players) do
+        lastCount = lastCount + 1
+        if v and v.time and ((now - v.time) < limitTime) then
+            nextCount = nextCount + 1
+            next[k] = v
+        end
+    end
+    WATCHDOG_DB.players = next
+    self:log(string.format(L.CLEAR_BAN_LIST_TIME_SUCCESS, lastCount - nextCount))
+    next, players = nil, nil
 end
 
 function Actions:banAllPlayers()
@@ -99,29 +123,57 @@ function Actions:unbanAllplayers()
     self:log(L.CLEAR_BAN_LIST_SUCCESS)
 end
 
-function Actions:importSettings(text, type)
-    if not text then return self:log(L.EXPORT_TEXT_EMPTY) end
-    local index = string.match(text, infos.DEFAULT_EXPORT_SEP)
-    if not index then return self:log(L.EXPORT_TEXT_ERROR) end
+function Actions:importSettings(text, isShared)
+    if not text then
+        if not isShared then self:log(L.EXPORT_TEXT_EMPTY) end
+        return
+    end
 
-    self:log(L.EXPORT_TIPS_WITH_TYPE_COVER)
+    local index = string.match(text, infos.DEFAULT_EXPORT_SEP)
+    if not index then
+        if not isShared then self:log(L.EXPORT_TEXT_ERROR) end
+        return
+    end
+
+    if not isShared then self:log(L.EXPORT_TIPS_WITH_TYPE_COVER) end
+
     local names = Utils:split(Utils:decode(text), infos.DEFAULT_EXPORT_SEP)
     local players = {}
-    local name, count = nil, 0
+    local name, count, time = nil, 0, time()
 
     for i = 1, #names do
         name = names[i]
         if name then 
             count = count + 1
-            players[name] = { status = 1, name = name }
+            if isShared then
+                WATCHDOG_DB.players[name] = { status = 1, name = name, time = time }
+            else
+                players[name] = { status = 1, name = name, time = time }
+            end
         end
         name = nil
     end
 
-    WATCHDOG_DB.players = players
+    if not isShared then
+        WATCHDOG_DB.players = players
+        self:log(string.format(L.EXPORT_SUCCESS, count))
+    end
     
-    self:log(string.format(L.EXPORT_SUCCESS, count))
     name, count, players, names = nil, nil, nil, nil
+end
+
+function Actions:ExportSettings()
+    local players, str, len = WATCHDOG_DB.players, infos.DEFAULT_EXPORT_SEP, 0
+                    
+    for k, v in pairs(players) do
+        if v and v.name then
+            len = len + 1
+            str = str..v.name..infos.DEFAULT_EXPORT_SEP
+        end
+    end
+    if len == 0 then str = '' end
+
+    return Utils:encode(str)
 end
 
 function Actions:findLimitItemLevel()
@@ -248,7 +300,7 @@ function Actions:sendVersionMessage()
 end
 
 function Actions:log(text)
-    local prefix = format("|CFF00FFFF%s: |r", L.ADDON_SHOW_NAME)
+    local prefix = format('|CFF00FFFF%s: |r', L.ADDON_SHOW_NAME)
     SendSystemMessage(prefix..text)
 end
 

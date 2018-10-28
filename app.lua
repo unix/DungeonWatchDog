@@ -1,6 +1,7 @@
 local ADDON_NAME = GetAddOnMetadata(..., 'Title')
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
+local L = LibStub('AceLocale-3.0'):GetLocale(ADDON_NAME, false)
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
+local AceComm = LibStub('AceComm-3.0')
 local infos = addon:GetModule('Constants'):GetInfos()
 local Actions = addon:GetModule('Actions')
 local pairs = pairs
@@ -104,4 +105,5 @@ function addon:OnEnable()
 
     replaceNativeUtilWithMenu()
     replaceSearchResult()
+    hookSearchBoxEnterPressed()
 end

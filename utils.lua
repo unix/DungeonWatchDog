@@ -1,13 +1,17 @@
 local ADDON_NAME = GetAddOnMetadata(..., 'Title')
 local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
-local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME, false)
+local L = LibStub('AceLocale-3.0'):GetLocale(ADDON_NAME, false)
 local Utils = addon:NewModule('Utils')
 
+function Utils:OnInitialize()
+    self.name = UnitName('player')..'-'..GetRealmName()
+end
+
 function Utils:encode(s)
-    local next = string.gsub(s, "([^%w%.%- ])", function(c) 
-        return string.format("%%%02X", string.byte(c)) 
+    local next = string.gsub(s, '([^%w%.%- ])', function(c) 
+        return string.format('%%%02X', string.byte(c)) 
     end)
-    return string.gsub(next, " ", "+") 
+    return string.gsub(next, ' ', '+') 
 end
 
 function Utils:decode(s)
@@ -32,5 +36,15 @@ function Utils:tableLength(t)
         count = count + 1
     end
     return count
+end
+
+function Utils:encodeCommMessages(messages, version)
+    version = not version and 1
+    return self.name..'_NEND_'..version..'_VEND_'..messages
+end
+
+function Utils:decodeCommMessages(messages)
+    local name, version, content = string.match(messages, '(.+)_NEND_(.+)_VEND_(.+)')
+    return name, version, content
 end
 
