@@ -4,7 +4,7 @@ local Init = addon:NewModule('Init')
 
 function Init:getDefaultSettings()
     return {
-        version = 5,
+        version = 6,
         players = {},
         defaultFilterToggle = true,
         versionMessageToggle = true,
@@ -34,6 +34,7 @@ function Init:DB()
             end
         end
     end
+    if not WATCHDOG_DB.players then WATCHDOG_DB.players = {} end
 end
 
 function Init:OnInitialize()
