@@ -7,11 +7,7 @@ local infos = addon:GetModule('Constants'):GetInfos()
 local L = LibStub('AceLocale-3.0'):GetLocale(ADDON_NAME, false)
 
 function Actions:OnInitialize()
-    self:updatePlayersCache()
-end
-
-function Actions:updatePlayersCache()
-    self.playersCache = WATCHDOG_DB.players or {}
+    self.time = time()
 end
 
 function Actions:initSlash()
@@ -29,10 +25,9 @@ function Actions:initAddonMessage()
     addonMessageFrame:RegisterEvent('READY_CHECK')
     addonMessageFrame:SetScript('OnEvent', function()
         local versionString = 'version:' .. infos.VERSION
-        local type = (IsInGuild() and 'GUILD')
-                or (IsInRaid() and 'RAID')
+        local type = (IsInRaid() and 'RAID')
                 or (IsInGroup() and 'PARTY')
-                or (IsInInstance() and 'INSTANCE_CHAT')
+                or (IsInGuild() and 'GUILD')
                 or nil
         if not type then return end
         AceComm:SendCommMessage(infos.ADDON_COMM_BASE, versionString, type)
@@ -56,7 +51,11 @@ end
 
 function Actions:isBannedPlayer(name)
     if not name then return nil end
-    return self.playersCache[name]
+    if WATCHDOG_DB.players[name] then 
+        WATCHDOG_DB.players[name].time = self.time
+        return true
+    end
+    return false
 end
 
 function Actions:banPlayerWithID(id)
@@ -66,7 +65,7 @@ function Actions:banPlayerWithID(id)
     if leaderName == nil then return SendSystemMessage(L.NOT_FOUND_PLAYER_NAME) end
 
     if not WATCHDOG_DB.players[leaderName] then 
-        WATCHDOG_DB.players[leaderName] = { status = 1, name = leaderName, time = time() }
+        WATCHDOG_DB.players[leaderName] = { time = time() }
         C_LFGList.ReportSearchResult(id, 'lfglistname')
         self:log(leaderName..' '..L.ACTION_BAN_MESSAGE)
     end
@@ -75,7 +74,7 @@ end
 function Actions:banPlayerWithName(name)
     if not name then return end
     if WATCHDOG_DB.players[name] then return end
-    WATCHDOG_DB.players[name] = { status = 1, name = name, time = time() }
+    WATCHDOG_DB.players[name] = { time = time() }
     self:log(name..' '..L.ACTION_BAN_MESSAGE)
 end
 
@@ -140,16 +139,17 @@ function Actions:importSettings(text, isShared)
 
     local names = Utils:split(Utils:decode(text), infos.DEFAULT_EXPORT_SEP)
     local players = {}
-    local name, count, time = nil, 0, time()
+    local name, count = nil, 0
+    local defaultPlayerObject = { time = time() }
 
     for i = 1, #names do
         name = names[i]
         if name then 
             count = count + 1
             if isShared then
-                WATCHDOG_DB.players[name] = { status = 1, name = name, time = time }
+                WATCHDOG_DB.players[name] = defaultPlayerObject
             else
-                players[name] = { status = 1, name = name, time = time }
+                players[name] = defaultPlayerObject
             end
         end
         name = nil
@@ -166,10 +166,10 @@ end
 function Actions:ExportSettings()
     local players, str, len = WATCHDOG_DB.players, infos.DEFAULT_EXPORT_SEP, 0
                     
-    for k, v in pairs(players) do
-        if v and v.name then
+    for name, v in pairs(players) do
+        if v and name then
             len = len + 1
-            str = str..v.name..infos.DEFAULT_EXPORT_SEP
+            str = str..name..infos.DEFAULT_EXPORT_SEP
         end
     end
     if len == 0 then str = '' end

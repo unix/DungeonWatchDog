@@ -15,7 +15,6 @@ local replaceSearchResult = function()
         local _, searchResults = _searchCopy()
         local players, lastSearchPlayers = {}, {}
         local passed, lastPlayer, count, lastCount = nil, nil, 0, 0
-        Actions:updatePlayersCache()
 
         for _, id in pairs(searchResults) do
             if id then
