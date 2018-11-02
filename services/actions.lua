@@ -29,10 +29,9 @@ function Actions:initAddonMessage()
     addonMessageFrame:RegisterEvent('READY_CHECK')
     addonMessageFrame:SetScript('OnEvent', function()
         local versionString = 'version:' .. infos.VERSION
-        local type = (IsInGuild() and 'GUILD')
-                or (IsInRaid() and 'RAID')
+        local type = (IsInRaid() and 'RAID')
                 or (IsInGroup() and 'PARTY')
-                or (IsInInstance() and 'INSTANCE_CHAT')
+                or (IsInGuild() and 'GUILD')
                 or nil
         if not type then return end
         AceComm:SendCommMessage(infos.ADDON_COMM_BASE, versionString, type)
