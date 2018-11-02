@@ -79,9 +79,9 @@ function IgnoreList:update(players)
     local scroll = AceGUI:Create('ScrollFrame')
     scroll:SetLayout('Flow')
 
-    for k, player in pairs(players) do
-        if player.name then 
-            scroll:AddChild(self:initItem(player.name))
+    for name, player in pairs(players) do
+        if name then 
+            scroll:AddChild(self:initItem(name))
         end
     end
     self.scroll = scroll
@@ -120,9 +120,9 @@ end
 
 function IgnoreList:updatePlayersWithKeyWord(text)
     local players, result, count = WATCHDOG_DB.players, {}, 0
-    for k, player in pairs(players) do 
-        if player.name and string.find(player.name, text) then
-            result[k] = player
+    for name, player in pairs(players) do 
+        if name and string.find(name, text) then
+            result[name] = player
             count = count + 1
         end
     end
