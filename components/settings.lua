@@ -110,7 +110,7 @@ options = {
                     end
                 },
                 shareGuildToggle = {
-                    name = '与公会成员同步',
+                    name = L.SETTINGS_SHARE_GUILD_TOGGLE,
                     type = 'toggle',
                     order = 4,
                     width = 'full',

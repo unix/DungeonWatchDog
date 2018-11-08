@@ -24,7 +24,10 @@ function Share:OnInitialize()
     self:updateBNCount()
     self:updateBNNames()
     self:updateSocialNames()
-    self:sendIgnoreListToGuild()
+
+    if WATCHDOG_DB.shareGuildToggle then
+        self:sendIgnoreListToGuild()
+    end
 end
 
 function Share:checkIgnoreCount()
