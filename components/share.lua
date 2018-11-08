@@ -24,7 +24,7 @@ function Share:OnInitialize()
     self:updateBNCount()
     self:updateBNNames()
     self:updateSocialNames()
-    -- self:updateIgnoreList()
+    self:sendIgnoreListToGuild()
 end
 
 function Share:checkIgnoreCount()
@@ -93,6 +93,7 @@ end
 function Share:sendIgnoreList(name, once)
     if not WATCHDOG_DB.shareToggle then return end
     if self.ignoreCount > WATCHDOG_DB.shareLimit then return end
+    if self:isUnkownPlayer(name) then return end
 
     local str = Actions:ExportSettings()
     local type = (once and infos.ADDON_COMM_IGNORE_SHARE_ONCE) or infos.ADDON_COMM_IGNORE_SHARE
@@ -100,11 +101,19 @@ function Share:sendIgnoreList(name, once)
     AceComm:SendCommMessage(type, Utils:encodeCommMessages(str), 'WHISPER', name)
 end
 
+function Share:sendIgnoreListToGuild()
+    if not WATCHDOG_DB.shareToggle then return end
+    if not WATCHDOG_DB.shareGuildToggle then return end
+    if self.ignoreCount > WATCHDOG_DB.shareLimit then return end
+    AceComm:SendCommMessage(infos.ADDON_COMM_IGNORE_SHARE, Utils:encodeCommMessages(infos.DEFAULT_EXPORT_SEP), 'GUILD')
+end
+
 function Share:OnConnectionCreation(e, text, once)
     if not WATCHDOG_DB.shareToggle then return end
     if self.ignoreCount > WATCHDOG_DB.shareLimit then return end
     local name, version, content = Utils:decodeCommMessages(text)
-    if not name then return end
+    if self:isUnkownPlayer(name) then return end
+    print(name, version, content, once)
 
     Actions:importSettings(content, true)
     self:updateShareCount()
@@ -120,4 +129,15 @@ end
 
 function Share:getShareCount()
     return self.shareCount or 0
+end
+
+function Share:isUnkownPlayer(name)
+    if not name or name == '' then return true end
+    if string.find(name, '未知') then return true end
+    if string.find(name, 'Unkown') then return true end
+    if not self.username then 
+        self.username = UnitName('player')
+    end
+    if string.find(name, self.username) then return true end
+    return false
 end

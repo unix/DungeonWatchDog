@@ -9,6 +9,7 @@ function Init:getDefaultSettings()
         defaultFilterToggle = true,
         versionMessageToggle = true,
         shareToggle = true,
+        shareGuildToggle = true,
         shareLimit = 500,
         ignoreTimeLimit = 259200,
     }
