@@ -11,6 +11,13 @@ local Actions = addon:GetModule('Actions')
 function Share:OnInitialize()
     self:RegisterMessage('NETWORKS_CONNECTION_CREATION', 'OnConnectionCreation')
 
+    ChatFrame_AddMessageEventFilter('CHAT_MSG_SYSTEM', function(_, _, msg)
+        if self:isUnkownMessage(msg) then return true end
+        return false
+    end)
+end
+
+function Share:init()
     if not WATCHDOG_DB.shareToggle then return end
     
     self.friends = {}
@@ -24,7 +31,6 @@ function Share:OnInitialize()
     self:updateBNCount()
     self:updateBNNames()
     self:updateSocialNames()
-
     if WATCHDOG_DB.shareGuildToggle then
         self:sendIgnoreListToGuild()
     end
@@ -85,20 +91,12 @@ function Share:updateSocialNames()
     end
 end
 
-function Share:updateIgnoreList()
-    for name, v in pairs(self.friends) do
-        if name and name ~= '' then
-            self:sendIgnoreList(name)
-        end
-    end
-end
-
 function Share:sendIgnoreList(name, once)
     if not WATCHDOG_DB.shareToggle then return end
     if self.ignoreCount > WATCHDOG_DB.shareLimit then return end
     if self:isUnkownPlayer(name) then return end
 
-    local str = Actions:ExportSettings()
+    local str = (once and Actions:ExportSettings()) or ''
     local type = (once and infos.ADDON_COMM_IGNORE_SHARE_ONCE) or infos.ADDON_COMM_IGNORE_SHARE
     if not Utils:notEmptyStr(str) then str = infos.DEFAULT_EXPORT_SEP end
     AceComm:SendCommMessage(type, Utils:encodeCommMessages(str), 'WHISPER', name)
@@ -116,7 +114,6 @@ function Share:OnConnectionCreation(e, text, once)
     if self.ignoreCount > WATCHDOG_DB.shareLimit then return end
     local name, version, content = Utils:decodeCommMessages(text)
     if self:isUnkownPlayer(name) then return end
-    print(name, version, content, once)
 
     Actions:importSettings(content, true)
     self:updateShareCount()
@@ -142,5 +139,12 @@ function Share:isUnkownPlayer(name)
         self.username = UnitName('player')
     end
     if string.find(name, self.username) then return true end
+    return false
+end
+
+function Share:isUnkownMessage(msg)
+    if not msg or msg == '' then return false end
+    if string.find(msg, '未找到名') then return true end
+    if string.find(msg, 'No player named') then return true end
     return false
 end

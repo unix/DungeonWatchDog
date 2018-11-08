@@ -4,6 +4,7 @@ local addon = LibStub('AceAddon-3.0'):GetAddon(ADDON_NAME)
 local AceComm = LibStub('AceComm-3.0')
 local infos = addon:GetModule('Constants'):GetInfos()
 local Actions = addon:GetModule('Actions')
+local Share = addon:GetModule('Share')
 local pairs = pairs
 
 local replaceSearchResult = function()
@@ -85,7 +86,8 @@ function addon:OnInitialize()
     f:RegisterEvent('ADDON_LOADED')
     f:RegisterEvent('PLAYER_LOGIN')
     f:SetScript('OnEvent', function (s, event, name)
-        if event == 'PLAYER_LOGIN' then 
+        if event == 'PLAYER_LOGIN' then
+            Share:init()
             f:UnregisterEvent('ADDON_LOADED')
             return f:UnregisterEvent('PLAYER_LOGIN')
         end
