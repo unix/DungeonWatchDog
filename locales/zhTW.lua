@@ -75,5 +75,6 @@ L['SETTINGS_SHARE_NAME'] = '共享'
 L['SETTINGS_SHARE_HEADER'] = '共享'
 L['SETTINGS_SHARE_DESC'] = '\n看門狗會自動與你的所有好友共享屏蔽列表。\n\n注意: 當你的屏蔽列表數量高於 %s 時，將不會再自動共享數據，除非你及時清理它們\n\n'
 L['SETTINGS_SHARE_TOGGLE'] = '自動共享'
+L['SETTINGS_SHARE_GUILD_TOGGLE'] = '與公會成員共享'
 
 L['SHARE_IGNORE_LIMIT'] = '您的自動共享已停止，因爲屏蔽列表數量超過了 %s，請及時清理。'

@@ -100,13 +100,29 @@ options = {
                     name = L.SETTINGS_SHARE_TOGGLE,
                     type = 'toggle',
                     order = 3,
-                    width = '0.5',
+                    width = 'full',
                     tristate = false,
                     get = function (info)
                         return (WATCHDOG_DB.shareToggle and true) or false
                     end,
                     set = function (info, t)
                         WATCHDOG_DB.shareToggle = t
+                    end
+                },
+                shareGuildToggle = {
+                    name = L.SETTINGS_SHARE_GUILD_TOGGLE,
+                    type = 'toggle',
+                    order = 4,
+                    width = 'full',
+                    tristate = false,
+                    disabled = false,
+                    get = function (info)
+                        info.options.args.shareOptions.args.shareGuildToggle.disabled = not WATCHDOG_DB.shareToggle
+                        local t = WATCHDOG_DB.shareToggle and WATCHDOG_DB.shareGuildToggle
+                        return (t and true) or false
+                    end,
+                    set = function (info, t)
+                        WATCHDOG_DB.shareGuildToggle = t
                     end
                 },
             },

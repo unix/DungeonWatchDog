@@ -140,14 +140,14 @@ function Actions:importSettings(text, isShared)
     local names = Utils:split(Utils:decode(text), infos.DEFAULT_EXPORT_SEP)
     local players = {}
     local name, count = nil, 0
-    local defaultPlayerObject = { time = time() }
+    local defaultPlayerObject, defaultShareObject = { time = time() }, { time = 0 }
 
     for i = 1, #names do
         name = names[i]
         if name then 
             count = count + 1
             if isShared then
-                WATCHDOG_DB.players[name] = defaultPlayerObject
+                WATCHDOG_DB.players[name] = defaultShareObject
             else
                 players[name] = defaultPlayerObject
             end
