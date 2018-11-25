@@ -266,15 +266,6 @@ function Actions:meetingStoneMixin()
                 tooltipOnButton = true,
             },
             {
-                text = L.MEETINGSTONE_IGNORE_TITLE,
-                func = function() self:banPlayerWithName(activity:GetLeader()) end,
-                disabled = not activity:GetLeader(),
-                tooltipTitle = L.MEETINGSTONE_IGNORE_TOOLTIP_TITLE,
-                tooltipText = L.MEETINGSTONE_IGNORE_TOOLTIP_DESC,
-                tooltipWhileDisabled = true,
-                tooltipOnButton = true,
-            },
-            {
                 text = WHISPER_LEADER,
                 func = function() ChatFrame_SendTell(activity:GetLeader()) end,
                 disabled = not activity:GetLeader() or not activity:IsApplication(),
@@ -282,6 +273,15 @@ function Actions:meetingStoneMixin()
                 tooltipText = not activity:IsApplication() and LFG_LIST_MUST_SIGN_UP_TO_WHISPER,
                 tooltipOnButton = true,
                 tooltipWhileDisabled = true,
+            },
+            {
+                text = L.MEETINGSTONE_IGNORE_TITLE,
+                func = function() self:banPlayerWithName(activity:GetLeader()) end,
+                disabled = not activity:GetLeader(),
+                tooltipTitle = L.MEETINGSTONE_IGNORE_TOOLTIP_TITLE,
+                tooltipText = L.MEETINGSTONE_IGNORE_TOOLTIP_DESC,
+                tooltipWhileDisabled = true,
+                tooltipOnButton = true,
             },
             {
                 text = CANCEL,
