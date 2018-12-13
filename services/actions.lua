@@ -60,14 +60,13 @@ end
 
 function Actions:banPlayerWithID(id)
     if not id then return end
-    local info = { C_LFGList.GetSearchResultInfo(id) }
-    local leaderName = info[13]
-    if leaderName == nil then return SendSystemMessage(L.NOT_FOUND_PLAYER_NAME) end
+    local result = C_LFGList.GetSearchResultInfo(id)
+    if result.leaderName == nil then return SendSystemMessage(L.NOT_FOUND_PLAYER_NAME) end
 
-    if not WATCHDOG_DB.players[leaderName] then 
-        WATCHDOG_DB.players[leaderName] = { time = time() }
+    if not WATCHDOG_DB.players[result.leaderName] then 
+        WATCHDOG_DB.players[result.leaderName] = { time = time() }
         C_LFGList.ReportSearchResult(id, 'lfglistname')
-        self:log(leaderName..' '..L.ACTION_BAN_MESSAGE)
+        self:log(result.leaderName..' '..L.ACTION_BAN_MESSAGE)
     end
 end
 
@@ -187,46 +186,36 @@ function Actions:findLimitItemLevel()
 end
 
 function Actions:checkListInfo(searchID, limitLevel, defaultFilterToggle)
-    
     local passed, lastPlayer = nil, nil
-    local id, _, _, _, _, ilvl, _, minutes, bnet, char, guild, _, leaderName, members = C_LFGList.GetSearchResultInfo(searchID)
-    if not id then
+    local result = C_LFGList.GetSearchResultInfo(searchID)
+    if not result.searchResultID then
         passed = true
         return passed, lastPlayer 
     end
 
     -- ilvl == 0 or nil is not set
-    minutes = (minutes or 0) / 60
-    local ilvlPassed = (not ilvl and true) or (ilvl == 0 and true) or (ilvl > limitLevel and true) or nil
-    local memberPassed = not (minutes > 20 and members <= 1)
-    local defaultFilter = (not defaultFilterToggle and true) or (ilvlPassed and memberPassed)
+    local ilvlPassed = (not result.requiredItemLevel and true) 
+        or (result.requiredItemLevel == 0 and true) 
+        or (result.requiredItemLevel > limitLevel and true) or nil
+    local defaultFilter = (not defaultFilterToggle and true) or ilvlPassed
 
     -- default filter 
     if not defaultFilter then return passed, lastPlayer end
 
-    if not leaderName then
-        C_Timer.After(0.5, function() self:fixLeaderName(id) end)
+    if not result.leaderName then
         passed = true
         return passed, lastPlayer 
     end
 
-    if not self:isBannedPlayer(leaderName) then
+    if not self:isBannedPlayer(result.leaderName) then
         passed = true
-
         -- not includes BNetFriends / CharFriends / GuildMates
-        if bnet == 0 and char == 0 and guild == 0 then
-            lastPlayer = { name = leaderName, id = id }
+        
+        if Utils:isNilOrZero(result.numBNetFriends, result.numCharFirends, result.numGuildMates) then
+            lastPlayer = { name = result.leaderName, id = result.searchResultID }
         end
     end
     return passed, lastPlayer
-end
-
-function Actions:fixLeaderName(id)
-    local info = { C_LFGList.GetSearchResultInfo(id) }
-    if not info[13] then return end
-    if info[9] ~= 0 or info[10] ~= 0 or info[11] ~= 0 then return end
-    if not WATCHDOG_VARS.LAST_SEARCH_RESULTS then WATCHDOG_VARS.LAST_SEARCH_RESULTS = {} end
-    table.insert(WATCHDOG_VARS.LAST_SEARCH_RESULTS, { name = info[13], id = id })
 end
 
 function Actions:meetingStoneMixin()

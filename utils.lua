@@ -7,6 +7,16 @@ function Utils:OnInitialize()
     self.name = UnitName('player')..'-'..GetRealmName()
 end
 
+function Utils:isNilOrZero(...)
+    local is = true
+    for k, v in pairs({...}) do
+        if v ~= nil and v ~= 0 then 
+            is = false
+        end
+    end
+    return is
+end
+
 function Utils:notEmptyStr(...)
     local notEmpty = true
     for k, str in pairs({...}) do
