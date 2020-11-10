@@ -61,6 +61,7 @@ end
 function Actions:banPlayerWithID(id)
     if not id then return end
     local result = C_LFGList.GetSearchResultInfo(id)
+
     if result.leaderName == nil then return SendSystemMessage(L.NOT_FOUND_PLAYER_NAME) end
 
     if not WATCHDOG_DB.players[result.leaderName] then 
@@ -188,7 +189,7 @@ end
 function Actions:checkListInfo(searchID, limitLevel, defaultFilterToggle)
     local passed, lastPlayer = nil, nil
     local result = C_LFGList.GetSearchResultInfo(searchID)
-    if not result.searchResultID then
+    if not result or not result.searchResultID then
         passed = true
         return passed, lastPlayer 
     end

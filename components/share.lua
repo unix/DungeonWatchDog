@@ -44,8 +44,7 @@ end
 
 function Share:updateBNCount()
     self.BNCount = BNGetNumFriends()
-    local _, online = GetNumFriends()
-    self.socialCount = online
+    self.socialCount = C_FriendList.GetNumOnlineFriends()
 end
 
 function Share:updateBNNames()
@@ -67,10 +66,10 @@ function Share:updateBNNames()
 
     local accounts = 0
     for i = 1, self.BNCount do
-        accounts = BNGetNumFriendGameAccounts(i)
+        accounts = C_BattleNet.GetFriendNumGameAccounts(i)
         if accounts and accounts ~= 0 then
             for k = 1, accounts do
-                updateHandle({ BNGetFriendGameAccountInfo(i, k) })
+                updateHandle({ C_BattleNet.GetFriendGameAccountInfo(i, k) })
             end
         end
         accounts = 0
@@ -79,8 +78,9 @@ end
 
 function Share:updateSocialNames()
     local realm = '-'..GetRealmName()
+
     for i = 1, self.socialCount do
-        local name, _, _, _, isOnline = GetFriendInfo(i)
+        local name, _, _, _, isOnline = C_FriendList.GetFriendInfo(i)
         if isOnline and Utils:notEmptyStr(name) then
             local full = name..realm
             if Utils:notEmptyStr(full) and not self.friends[full] then
