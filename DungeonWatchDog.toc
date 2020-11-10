@@ -1,9 +1,9 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: DungeonWatchDog
 ## Title-zhCN: 看门狗
 ## Notes: Ignore players in dungeon finder
 ## Notes-zhCN: 帮助您更优质的组建队伍
-## Version: 2.5.1
+## Version: @project-version@
 ## SavedVariables: WATCHDOG_VARS
 ## SavedVariablesPerCharacter: WATCHDOG_DB
 ## LoadManagers: AddonLoader
